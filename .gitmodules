@@ -1,0 +1,6 @@
+[submodule "ac-library"]
+	path = ac-library
+	url = https://github.com/atcoder/ac-library.git
+[submodule "problems"]
+	path = problems
+	url = https://github.com/yosupo06/library-checker-problems.git
