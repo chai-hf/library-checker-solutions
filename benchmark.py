@@ -118,8 +118,6 @@ def run_benchmark(exe, inputs, summary):
         for test_name, _, _, perf_output, time_output in results:
             f.write(f"=== {test_name} ===\n{time_output}\n{perf_output}\n")
 
-    print(f"Benchmark results written to {summary}")
-
 if __name__ == "__main__":
     if len(sys.argv) < 4:
         print("Usage: benchmark.py EXE INPUTS SUMMARY")
