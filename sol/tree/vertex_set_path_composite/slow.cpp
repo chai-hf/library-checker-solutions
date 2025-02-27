@@ -124,30 +124,6 @@ int main() {
                 int u = node2id[rd.uh()];
                 int v = node2id[rd.uh()];
                 u32 x = rd.uw();
-                if (depth[u] < 36 & depth[v] < 36) {
-                    Node vec[36];
-                    int c = 0;
-                    while (depth[u] > depth[v]) {
-                        x = node[n + u] + x;
-                        u = parent[u];
-                    }
-                    while (depth[u] < depth[v]) {
-                        vec[++c] = node[n + v];
-                        v = parent[v];
-                    }
-                    while (u != v) {
-                        x = node[n + u] + x;
-                        u = parent[u];
-                        vec[++c] = node[n + v];
-                        v = parent[v];
-                    }
-                    x = node[n + u] + x;
-                    for (; c > 0; --c) {
-                        x = x + vec[c];
-                    }
-                    wt.uw(x);
-                    break;
-                }
                 std::pair<int, int> vec[20];
                 int c = 0;
                 while (ances[u] != ances[v]) {
