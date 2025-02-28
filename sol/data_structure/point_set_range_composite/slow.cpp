@@ -52,15 +52,15 @@ int main() {
                 int l = rd.uh() * 2 + 1;
                 int r = rd.uh() * 2 + 1;
                 u32 x = a[l] + rd.uw();
+                node f = {1, 0};
                 int k = (-1 << std::__lg(l ^ r)) & r;
                 for (++l; l < k; l += l & -l) {
                     x = a[l + (l & -l) / 2] + x;
                 }
-                for (--r; k < r;) {
-                    int t = 1 << std::__lg(r - k);
-                    x = a[k + t / 2] + x;
-                    k += t;
+                for (--r; r > k; r -= r & -r) {
+                    f = a[r - (r & -r) / 2] + f;
                 }
+                x = f + x;
                 wt.uw(x);
                 break;
             }
