@@ -1,0 +1,8 @@
+-xc++
+-Wall
+-Wextra
+-Wconversion
+-std=gnu++26
+-Iac-library
+-Iinclude
+-Iproblems/common
