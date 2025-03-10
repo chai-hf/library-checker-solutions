@@ -15,7 +15,7 @@ add_compile_options(-march=native)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/ac-library)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/include)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/problems/common)
-add_link_options(-Wl,-rpath,/usr/14.2.0/lib64)
+add_link_options(-Wl,-rpath,/usr/gcc-14.2.0/lib64)
 
 # Set compile options
 set(DEBUG_CFLAGS -UNDEBUG -g3 -O0 -fsanitize=undefined,address -fno-sanitize-recover=all -Wall -Wextra -Wconversion)
@@ -194,7 +194,7 @@ add_custom_target(quick DEPENDS ${QUICK})
 add_custom_target(check DEPENDS ${QUICK} ${CHECK})
 add_custom_target(globl
     COMMAND rm -rf global-coverage
-    COMMAND lcov --gcov-tool /usr/14.2.0/bin/gcov -d . -c -o global-coverage.info --exclude "*.cc"
+    COMMAND lcov --gcov-tool /usr/gcc-14.2.0/bin/gcov -d . -c -o global-coverage.info --exclude "*.cc"
     COMMAND lcov -e global-coverage.info '${CMAKE_SOURCE_DIR}/*' -o global-coverage.info
     COMMAND genhtml -p ${CMAKE_SOURCE_DIR} --demangle-cpp -o global-coverage global-coverage.info
     COMMAND open global-coverage/index.html
@@ -202,7 +202,7 @@ add_custom_target(globl
 )
 add_custom_target(local
     COMMAND rm -rf local-coverage
-    COMMAND lcov --gcov-tool /usr/14.2.0/bin/gcov -d . -c -o local-coverage.info --include "*.cc"
+    COMMAND lcov --gcov-tool /usr/gcc-14.2.0/bin/gcov -d . -c -o local-coverage.info --include "*.cc"
     COMMAND lcov -e local-coverage.info '${CMAKE_SOURCE_DIR}/*' -o local-coverage.info
     COMMAND genhtml -p ${CMAKE_SOURCE_DIR}/sol --demangle-cpp -o local-coverage local-coverage.info
     COMMAND open local-coverage/index.html
