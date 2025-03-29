@@ -44,15 +44,6 @@ def build_step_2(int u, int a, int p) -> void {
 }
 
 def lca(int u, int v) -> int {
-  if (depth[u] < 32 && depth[v] < 32) {
-    while (depth[u] > depth[v]) { u = parent[u]; }
-    while (depth[v] > depth[u]) { v = parent[v]; }
-    while (u != v) {
-      u = parent[u];
-      v = parent[v];
-    }
-    return u;
-  }
   while (ances[u] != ances[v]) {
     if (depth[ances[u]] > depth[ances[v]]) {
       u = parent[ances[u]];
@@ -66,10 +57,6 @@ def lca(int u, int v) -> int {
 int jump(int u, int d) {
   [[assume(0 <= d)]];
   [[assume(d <= depth[u])]];
-  if (int t = depth[u] - d; t < 32) {
-    while (t--) u = parent[u];
-    return u;
-  }
   while (depth[ances[u]] > d) { u = parent[ances[u]]; }
   return id2node[node2id[u] - depth[u] + d];
 }
