@@ -1,0 +1,7 @@
+.cache
+build
+coverage
+compile_commands.json
+*.cpp.c++
+*.cpp.cxx
+*.cpp.md
