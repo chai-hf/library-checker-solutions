@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>example_00</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <pre><code class="language-cpp">/tmp/solutions/build/jump_on_tree-slow.cpp:
+    1|       |#include &lt;common.h&gt;
+    2|       |prelude;
+    3|       |
+    4|       |namespace {
+    5|       |
+    6|       |constexpr int N = 5e5;
+    7|       |
+    8|       |struct {
+    9|       |  int to;
+   10|       |  int nxt;
+   11|       |} edge[N * 2];
+   12|       |int head[N];
+   13|       |int size[N];
+   14|       |int depth[N];
+   15|       |int heavy[N];
+   16|       |int ances[N];
+   17|       |int parent[N];
+   18|       |int node2id[N];
+   19|       |int id2node[N];
+   20|       |int id;
+   21|       |
+   22|      8|def build_step_1(int u, int d, int p) -&gt; void {
+   23|      8|  size[u] = 1;
+   24|      8|  depth[u] = d;
+   25|      8|  parent[u] = p;
+   26|     22|  for (int e = head[u]; e; e = edge[e].nxt) {
+                                         ^14
+  ------------------
+  |  Branch (26:25): [True: 63.64%, False: 36.36%]
+  ------------------
+   27|     14|    if (int v = edge[e].to; v != p) {
+  ------------------
+  |  Branch (27:29): [True: 50.00%, False: 50.00%]
+  ------------------
+   28|      7|      build_step_1(v, d + 1, u);
+   29|      7|      size[u] += size[v];
+   30|      7|      if (heavy[u] == 0 || size[v] &gt; size[heavy[u]]) {
+                                         ^3
+  ------------------
+  |  Branch (30:11): [True: 57.14%, False: 42.86%]
+  |  Branch (30:28): [True: 66.67%, False: 33.33%]
+  ------------------
+   31|      6|        heavy[u] = v;
+   32|      6|      }
+   33|      7|    }
+   34|     14|  }
+   35|      8|}
+   36|       |
+   37|      8|def build_step_2(int u, int a, int p) -&gt; void {
+   38|      8|  node2id[u] = id;
+   39|      8|  id2node[id] = u;
+   40|      8|  ++id;
+   41|      8|  ances[u] = a;
+   42|      8|  if (heavy[u]) build_step_2(heavy[u], a, u);
+                              ^4
+  ------------------
+  |  Branch (42:7): [True: 50.00%, False: 50.00%]
+  ------------------
+   43|     22|  for (int e = head[u]; e; e = edge[e].nxt) {
+                                         ^14
+  ------------------
+  |  Branch (43:25): [True: 63.64%, False: 36.36%]
+  ------------------
+   44|     14|    if (int v = edge[e].to; v != heavy[u] &amp;&amp; v != p) {
+                                                           ^10
+  ------------------
+  |  Branch (44:29): [True: 71.43%, False: 28.57%]
+  |  Branch (44:46): [True: 30.00%, False: 70.00%]
+  ------------------
+   45|      3|      build_step_2(v, v, u);
+   46|      3|    }
+   47|     14|  }
+   48|      8|}
+   49|       |
+   50|     13|def lca(int u, int v) -&gt; int {
+   51|     29|  while (ances[u] != ances[v]) {
+  ------------------
+  |  Branch (51:10): [True: 55.17%, False: 44.83%]
+  ------------------
+   52|     16|    if (depth[ances[u]] &gt; depth[ances[v]]) {
+  ------------------
+  |  Branch (52:9): [True: 31.25%, False: 68.75%]
+  ------------------
+   53|      5|      u = parent[ances[u]];
+   54|     11|    } else {
+   55|     11|      v = parent[ances[v]];
+   56|     11|    }
+   57|     16|  }
+   58|     13|  return depth[u] &lt; depth[v] ? u : v;
+                                             ^5  ^8
+  ------------------
+  |  Branch (58:10): [True: 38.46%, False: 61.54%]
+  ------------------
+   59|     13|}
+   60|       |
+   61|     10|def jump(int u, int d) -&gt; int {
+   62|     12|  while (depth[ances[u]] &gt; d) {
+  ------------------
+  |  Branch (62:10): [True: 16.67%, False: 83.33%]
+  ------------------
+   63|      2|    u = parent[ances[u]];
+   64|      2|  }
+   65|     10|  return id2node[node2id[u] - depth[u] + d];
+   66|     10|}
+   67|       |
+   68|       |} // namespace
+   69|       |
+   70|      1|int main() {
+   71|      1|  rd rd;
+   72|      1|  wt wt;
+   73|      1|  int n = rd.uh();
+   74|      1|  int q = rd.uh();
+   75|      1|#ifdef LOCAL
+   76|      1|  id = 0;
+   77|      1|  std::memset(head, 0, 4 * n);
+   78|      1|  std::memset(heavy, 0, 4 * n);
+   79|      1|  std::memset(parent, 0, 4 * n);
+   80|      1|#endif
+   81|      8|  for (int i = 1; i &lt; n; ++i) {
+                                       ^7
+  ------------------
+  |  Branch (81:19): [True: 87.50%, False: 12.50%]
+  ------------------
+   82|      7|    int a = rd.uh();
+   83|      7|    int b = rd.uh();
+   84|      7|    edge[i * 2 | 0] = {b, head[a]}, head[a] = i * 2 | 0;
+   85|      7|    edge[i * 2 | 1] = {a, head[b]}, head[b] = i * 2 | 1;
+   86|      7|  }
+   87|      1|  build_step_1(0, 0, -1);
+   88|      1|  build_step_2(0, 0, -1);
+   89|     14|  while (q--) {
+  ------------------
+  |  Branch (89:10): [True: 92.86%, False: 7.14%]
+  ------------------
+   90|     13|    int u = rd.uh();
+   91|     13|    int v = rd.uh();
+   92|     13|    int k = rd.uh();
+   93|     13|    int w = lca(u, v);
+   94|     13|    int du = depth[u];
+   95|     13|    int dv = depth[v];
+   96|     13|    int dw = depth[w];
+   97|     13|    if (k &lt;= du - dw) {
+  ------------------
+  |  Branch (97:9): [True: 46.15%, False: 53.85%]
+  ------------------
+   98|      6|      int x = jump(u, du - k);
+   99|      6|      wt.uw(x);
+  100|      7|    } else if (k &lt;= du + dv - dw - dw) {
+  ------------------
+  |  Branch (100:16): [True: 57.14%, False: 42.86%]
+  ------------------
+  101|      4|      int x = jump(v, dw + dw - du + k);
+  102|      4|      wt.uw(x);
+  103|      4|    } else {
+  104|      3|      wt.puts(" -1", 3);
+  105|      3|    }
+  106|     13|  }
+  107|      1|  return 0;
+  108|      1|}
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../coverage/jump_on_tree-slow/almost_uni_01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../coverage/jump_on_tree-slow/line_00.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../coverage/jump_on_tree-slow/almost_uni_01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../coverage/jump_on_tree-slow/line_00.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

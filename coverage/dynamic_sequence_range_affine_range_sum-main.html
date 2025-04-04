@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>dynamic_sequence_range_affine_range_sum-main</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <pre><code class="language-cpp">/tmp/solutions/build/dynamic_sequence_range_affine_range_sum-main.cpp:
+    1|       |#include &lt;common.h&gt;
+    2|       |prelude;
+    3|       |
+    4|       |namespace {
+    5|       |
+    6|       |constexpr int N = 1000003;
+    7|       |constexpr u32 P = 998244353;
+    8|       |
+    9|       |struct Node {
+   10|       |  u32 val;
+   11|       |  u32 sum;
+   12|       |  u32 a;
+   13|       |  u32 b;
+   14|       |  int rev;
+   15|       |  int size;
+   16|       |  int l, r;
+   17|       |} node[N];
+   18|       |
+   19|   252M|def maintain(int x) -&gt; void {
+   20|   252M|  node[x].size = node[node[x].l].size + 1 + node[node[x].r].size;
+   21|   252M|  node[x].sum = (node[node[x].l].sum + node[x].val + node[node[x].r].sum) % P;
+   22|   252M|}
+   23|       |
+   24|  11.2M|def build(int l, int r) -&gt; int {
+   25|  11.2M|  if (l &gt; r) return 0;
+                           ^5.61M
+  ------------------
+  |  Branch (25:7): [True: 50.00%, False: 50.00%]
+  ------------------
+   26|  5.61M|  int m = (l + r) / 2;
+   27|  5.61M|  node[m].l = build(l, m - 1);
+   28|  5.61M|  node[m].r = build(m + 1, r);
+   29|  5.61M|  maintain(m);
+   30|  5.61M|  return m;
+   31|  11.2M|}
+   32|       |
+   33|  1.06M|def reverse(int x) -&gt; void { node[x].rev ^= 1; }
+   34|       |
+   35|   201M|def affine(int x, u64 a, u64 b) -&gt; void {
+   36|   201M|  if (x == 0) return;
+                            ^14.7M
+  ------------------
+  |  Branch (36:7): [True: 7.29%, False: 92.71%]
+  ------------------
+   37|   187M|  node[x].a = (a * node[x].a) % P;
+   38|   187M|  node[x].b = (a * node[x].b + b) % P;
+   39|   187M|  node[x].val = (a * node[x].val + b) % P;
+   40|   187M|  node[x].sum = (a * node[x].sum + b * node[x].size) % P;
+   41|   187M|}
+   42|       |
+   43|   266M|def pushdown(int x) -&gt; void {
+   44|   266M|  if (node[x].rev) {
+  ------------------
+  |  Branch (44:7): [True: 20.40%, False: 79.60%]
+  ------------------
+   45|  54.3M|    std::swap(node[x].l, node[x].r);
+   46|  54.3M|    node[node[x].l].rev ^= 1;
+   47|  54.3M|    node[node[x].r].rev ^= 1;
+   48|  54.3M|    node[x].rev = 0;
+   49|  54.3M|  }
+   50|   266M|  if ((node[x].a != 1) | (node[x].b != 0)) {
+  ------------------
+  |  Branch (50:7): [True: 37.69%, False: 62.31%]
+  ------------------
+   51|   100M|    affine(node[x].l, node[x].a, node[x].b);
+   52|   100M|    affine(node[x].r, node[x].a, node[x].b);
+   53|   100M|    node[x].a = 1;
+   54|   100M|    node[x].b = 0;
+   55|   100M|  }
+   56|   266M|}
+   57|       |
+   58|   130M|def zig(int &amp;x) -&gt; void {
+   59|   130M|  int l = node[x].l;
+   60|   130M|  node[x].l = node[l].r;
+   61|   130M|  maintain(x);
+   62|   130M|  node[l].r = x;
+   63|   130M|  x = l;
+   64|   130M|}
+   65|       |
+   66|   116M|def zag(int &amp;x) -&gt; void {
+   67|   116M|  int r = node[x].r;
+   68|   116M|  node[x].r = node[r].l;
+   69|   116M|  maintain(x);
+   70|   116M|  node[r].l = x;
+   71|   116M|  x = r;
+   72|   116M|}
+   73|       |
+   74|   138M|def splay(int &amp;x, int k) -&gt; void {
+   75|   138M|  pushdown(x);
+   76|   138M|  if (int &amp;l = node[x].l, &amp;r = node[x].r, size = node[l].size; k == size) {
+  ------------------
+  |  Branch (76:64): [True: 7.76%, False: 92.24%]
+  ------------------
+   77|  10.7M|    return;
+   78|   127M|  } else if (k &lt; size) {
+  ------------------
+  |  Branch (78:14): [True: 52.93%, False: 47.07%]
+  ------------------
+   79|  67.6M|    pushdown(l);
+   80|  67.6M|    if (int &amp;ll = node[l].l, &amp;lr = node[l].r, size = node[ll].size; k == size) {
+  ------------------
+  |  Branch (80:69): [True: 8.77%, False: 91.23%]
+  ------------------
+   81|  5.93M|      zig(x);
+   82|  61.7M|    } else if (k &lt; size) {
+  ------------------
+  |  Branch (82:16): [True: 57.17%, False: 42.83%]
+  ------------------
+   83|  35.2M|      splay(ll, k);
+   84|  35.2M|      zig(x);
+   85|  35.2M|      zig(x);
+   86|  35.2M|    } else {
+   87|  26.4M|      splay(lr, k - size - 1);
+   88|  26.4M|      zag(l);
+   89|  26.4M|      zig(x);
+   90|  26.4M|    }
+   91|  67.6M|  } else {
+   92|  60.1M|    pushdown(r);
+   93|  60.1M|    k -= size + 1;
+   94|  60.1M|    if (int &amp;rl = node[r].l, &amp;rr = node[r].r, size = node[rl].size; k == size) {
+  ------------------
+  |  Branch (94:69): [True: 4.94%, False: 95.06%]
+  ------------------
+   95|  2.97M|      zag(x);
+   96|  57.2M|    } else if (k &lt; size) {
+  ------------------
+  |  Branch (96:16): [True: 47.86%, False: 52.14%]
+  ------------------
+   97|  27.3M|      splay(rl, k);
+   98|  27.3M|      zig(r);
+   99|  27.3M|      zag(x);
+  100|  29.8M|    } else {
+  101|  29.8M|      splay(rr, k - size - 1);
+  102|  29.8M|      zag(x);
+  103|  29.8M|      zag(x);
+  104|  29.8M|    }
+  105|  60.1M|  }
+  106|   138M|}
+  107|       |
+  108|       |} // namespace
+  109|       |
+  110|     33|int main() {
+  111|     33|  rd rd;
+  112|     33|  wt wt;
+  113|     33|  int n = rd.uh();
+  114|     33|  int q = rd.uh();
+  115|  15.4M|  for (int i = 1; i &lt;= n + q + 1; ++i) node[i] = Node{.a = 1, .size = 1};
+                                                ^15.4M^15.4M
+  ------------------
+  |  Branch (115:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  116|  5.61M|  for (int i = 2; i &lt;= n + 1; ++i) node[i].val = rd.uw();
+                                            ^5.61M^5.61M
+  ------------------
+  |  Branch (116:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  117|     33|  int x = build(1, n += 2);
+  118|  9.83M|  while (q--) {
+  ------------------
+  |  Branch (118:10): [True: 100.00%, False: 0.00%]
+  ------------------
+  119|  9.83M|    let t = rd.u1();
+  120|  9.83M|    if (t == 0) {
+  ------------------
+  |  Branch (120:9): [True: 46.44%, False: 53.56%]
+  ------------------
+  121|  4.56M|      ++n;
+  122|  4.56M|      int k = rd.uh();
+  123|  4.56M|      node[n].val = node[n].sum = rd.uw();
+  124|  4.56M|      splay(x, k);
+  125|  4.56M|      splay(node[x].r, 0);
+  126|  4.56M|      node[node[x].r].l = n;
+  127|  4.56M|    }
+  128|  9.83M|    if (t == 1) {
+  ------------------
+  |  Branch (128:9): [True: 10.84%, False: 89.16%]
+  ------------------
+  129|  1.06M|      int k = rd.uh();
+  130|  1.06M|      splay(x, k);
+  131|  1.06M|      splay(node[x].r, 1);
+  132|  1.06M|      node[node[x].r].l = 0;
+  133|  1.06M|    }
+  134|  9.83M|    if (t == 2) {
+  ------------------
+  |  Branch (134:9): [True: 10.85%, False: 89.15%]
+  ------------------
+  135|  1.06M|      int l = rd.uh();
+  136|  1.06M|      int r = rd.uh();
+  137|  1.06M|      splay(x, l);
+  138|  1.06M|      splay(node[x].r, r - l);
+  139|  1.06M|      reverse(node[node[x].r].l);
+  140|  1.06M|    }
+  141|  9.83M|    if (t == 3) {
+  ------------------
+  |  Branch (141:9): [True: 10.86%, False: 89.14%]
+  ------------------
+  142|  1.06M|      int l = rd.uh();
+  143|  1.06M|      int r = rd.uh();
+  144|  1.06M|      splay(x, l);
+  145|  1.06M|      splay(node[x].r, r - l);
+  146|  1.06M|      int a = rd.uw();
+  147|  1.06M|      int b = rd.uw();
+  148|  1.06M|      affine(node[node[x].r].l, a, b);
+  149|  1.06M|    }
+  150|  9.83M|    if (t == 4) {
+  ------------------
+  |  Branch (150:9): [True: 21.02%, False: 78.98%]
+  ------------------
+  151|  2.06M|      int l = rd.uh();
+  152|  2.06M|      int r = rd.uh();
+  153|  2.06M|      splay(x, l);
+  154|  2.06M|      splay(node[x].r, r - l);
+  155|  2.06M|      wt.ud(node[node[node[x].r].l].sum);
+  156|  2.06M|    }
+  157|  9.83M|  }
+  158|     33|  return 0;
+  159|     33|}
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../coverage/associative_array-main/unordered_map_killer_02.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../coverage/dynamic_sequence_range_affine_range_sum-main/example_00.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../coverage/associative_array-main/unordered_map_killer_02.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../coverage/dynamic_sequence_range_affine_range_sum-main/example_00.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

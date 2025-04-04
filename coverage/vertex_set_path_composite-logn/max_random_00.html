@@ -1,0 +1,598 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>max_random_00</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <pre><code class="language-cpp">/tmp/solutions/build/vertex_set_path_composite-logn.cpp:
+    1|       |#include &lt;common.h&gt;
+    2|       |#include &lt;toy/bit.h&gt;
+    3|       |prelude;
+    4|       |
+    5|       |namespace {
+    6|       |
+    7|       |constexpr int N = 200001;
+    8|       |constexpr int P = 998244353;
+    9|       |
+   10|       |struct Vertex {
+   11|       |  u32 a, b;
+   12|       |};
+   13|       |struct Segment {
+   14|       |  u32 a, b, c;
+   15|       |  Segment() = default;
+   16|   576k|  Segment(Vertex v) : a{v.a}, b{v.b}, c{v.b} {}
+   17|  1.88M|  Segment(u32 a, u32 b, u32 c) : a{a}, b{b}, c{c} {}
+   18|       |};
+   19|       |struct Node {
+   20|       |  Vertex v;
+   21|       |  Segment s, t;
+   22|       |  int l, r, p;
+   23|       |} node[N];
+   24|  1.68M|auto operator+(const Segment &amp;l, const Segment &amp;r) -&gt; Segment {
+   25|  1.68M|  u32 x = u64(l.a) * r.a % P;
+   26|  1.68M|  u32 y = (u64(l.a) * r.b + l.b) % P;
+   27|  1.68M|  u32 z = (u64(r.a) * l.c + r.c) % P;
+   28|  1.68M|  return {x, y, z};
+   29|  1.68M|}
+   30|   769k|auto operator+(const Segment &amp;l, u32 r) -&gt; u32 {
+   31|   769k|  return (u64(l.a) * r + l.b) % P;
+   32|   769k|}
+   33|  99.9k|auto operator+(u32 l, const Segment &amp;r) -&gt; u32 {
+   34|  99.9k|  return (u64(r.a) * l + r.c) % P;
+   35|  99.9k|}
+   36|       |u32 a[N];
+   37|       |u32 b[N];
+   38|       |int head[N];
+   39|       |int size[N];
+   40|       |int depth[N];
+   41|       |int heavy[N];
+   42|       |int ances[N];
+   43|       |int parent[N];
+   44|       |int node2id[N];
+   45|       |u8 priority[N];
+   46|       |int id;
+   47|       |struct {
+   48|       |  int to;
+   49|       |  int next;
+   50|       |} edge[N * 2];
+   51|       |
+   52|   200k|def build_step_1(int u, int p) -&gt; void {
+   53|   200k|  size[u] = 1;
+   54|   599k|  for (int e = head[u]; e; e = edge[e].next) {
+                                         ^399k
+  ------------------
+  |  Branch (54:25): [True: 66.67%, False: 33.33%]
+  ------------------
+   55|   399k|    int v = edge[e].to;
+   56|   399k|    if (v != p) {
+  ------------------
+  |  Branch (56:9): [True: 50.00%, False: 50.00%]
+  ------------------
+   57|   199k|      build_step_1(v, u);
+   58|   199k|      size[u] += size[v];
+   59|   199k|      if (heavy[u] == 0 || size[v] &gt; size[heavy[u]]) {
+                                         ^99.9k
+  ------------------
+  |  Branch (59:11): [True: 50.04%, False: 49.96%]
+  |  Branch (59:28): [True: 46.72%, False: 53.28%]
+  ------------------
+   60|   146k|        heavy[u] = v;
+   61|   146k|      }
+   62|   199k|    }
+   63|   399k|  }
+   64|   200k|}
+   65|       |
+   66|   200k|def build_step_2(int u, int w, int p, int d) -&gt; void {
+   67|   200k|  int i = ++id;
+   68|   200k|  node2id[u] = i;
+   69|   200k|  depth[i] = d;
+   70|   200k|  ances[i] = node2id[w];
+   71|   200k|  parent[i] = node2id[p];
+   72|   200k|  node[i].v = {a[u], b[u]};
+   73|   599k|  for (int e = head[u]; e; e = edge[e].next) {
+                                         ^399k
+  ------------------
+  |  Branch (73:25): [True: 66.67%, False: 33.33%]
+  ------------------
+   74|   399k|    int v = edge[e].to;
+   75|   399k|    if (v != p &amp;&amp; v != heavy[u]) {
+                                ^199k
+  ------------------
+  |  Branch (75:9): [True: 50.00%, False: 50.00%]
+  |  Branch (75:19): [True: 49.96%, False: 50.04%]
+  ------------------
+   76|  99.9k|      build_step_2(v, v, u, d + 1);
+   77|  99.9k|    }
+   78|   399k|  }
+   79|   200k|  priority[i] = u8(log(i ^ (id + 1)));
+   80|   200k|  if (u != w) {
+  ------------------
+  |  Branch (80:7): [True: 50.04%, False: 49.96%]
+  ------------------
+   81|   100k|    int p = parent[i];
+   82|   100k|    int l = 0;
+   83|   154k|    while (p &amp;&amp; priority[p] &lt; priority[i]) {
+                              ^129k
+  ------------------
+  |  Branch (83:12): [True: 83.47%, False: 16.53%]
+  |  Branch (83:17): [True: 42.28%, False: 57.72%]
+  ------------------
+   84|  54.5k|      l = p;
+   85|  54.5k|      p = node[p].p;
+   86|  54.5k|    }
+   87|   100k|    node[p].r = i;
+   88|   100k|    node[i].p = p;
+   89|   100k|    node[i].l = l;
+   90|   100k|    node[l].p = i;
+   91|   100k|  }
+   92|   200k|  if (int v = heavy[u]; v) {
+  ------------------
+  |  Branch (92:25): [True: 50.04%, False: 49.96%]
+  ------------------
+   93|   100k|    build_step_2(v, w, u, d + 1);
+   94|   100k|  }
+   95|   200k|}
+   96|       |
+   97|   385k|def maintain(int u) -&gt; void {
+   98|   385k|  node[u].s = (node[u].t = node[node[u].l].s + node[u].v) + node[node[u].r].s;
+   99|   385k|}
+  100|       |
+  101|   796k|template &lt;typename T&gt; T apply(int k, T x) {
+  102|  2.42M|  for (int u = k; u; u = node[u].p) {
+                                   ^1.62M
+  ------------------
+  |  Branch (102:19): [True: 67.12%, False: 32.88%]
+  ------------------
+  |  Branch (102:19): [True: 67.06%, False: 32.94%]
+  ------------------
+  103|  1.62M|    if (u &lt;= k) {
+  ------------------
+  |  Branch (103:9): [True: 75.24%, False: 24.76%]
+  ------------------
+  |  Branch (103:9): [True: 75.20%, False: 24.80%]
+  ------------------
+  104|  1.22M|      x = node[u].t + x;
+  105|  1.22M|    }
+  106|  1.62M|  }
+  107|   796k|  return x;
+  108|   796k|}
+  ------------------
+  | vertex_set_path_composite-logn.cpp:_ZN12_GLOBAL__N_15applyIjEET_iS1_:
+  |  101|   398k|template &lt;typename T&gt; T apply(int k, T x) {
+  |  102|  1.21M|  for (int u = k; u; u = node[u].p) {
+  |                                   ^812k
+  |  ------------------
+  |  |  Branch (102:19): [True: 67.12%, False: 32.88%]
+  |  ------------------
+  |  103|   812k|    if (u &lt;= k) {
+  |  ------------------
+  |  |  Branch (103:9): [True: 75.24%, False: 24.76%]
+  |  ------------------
+  |  104|   611k|      x = node[u].t + x;
+  |  105|   611k|    }
+  |  106|   812k|  }
+  |  107|   398k|  return x;
+  |  108|   398k|}
+  ------------------
+  | vertex_set_path_composite-logn.cpp:_ZN12_GLOBAL__N_15applyINS_7SegmentEEET_iS2_:
+  |  101|   398k|template &lt;typename T&gt; T apply(int k, T x) {
+  |  102|  1.21M|  for (int u = k; u; u = node[u].p) {
+  |                                   ^811k
+  |  ------------------
+  |  |  Branch (102:19): [True: 67.06%, False: 32.94%]
+  |  ------------------
+  |  103|   811k|    if (u &lt;= k) {
+  |  ------------------
+  |  |  Branch (103:9): [True: 75.20%, False: 24.80%]
+  |  ------------------
+  |  104|   610k|      x = node[u].t + x;
+  |  105|   610k|    }
+  |  106|   811k|  }
+  |  107|   398k|  return x;
+  |  108|   398k|}
+  ------------------
+  109|       |
+  110|  99.9k|template &lt;typename T&gt; T apply(int l, int r, T x) {
+  111|  99.9k|  Segment t = {1, 0, 0};
+  112|  99.9k|  int u = l;
+  113|  99.9k|  int v = r;
+  114|   316k|  while (u != v) {
+  ------------------
+  |  Branch (114:10): [True: 64.98%, False: 35.02%]
+  ------------------
+  |  Branch (114:10): [True: 72.29%, False: 27.71%]
+  ------------------
+  115|   216k|    if (priority[u] &lt; priority[v]) {
+  ------------------
+  |  Branch (115:9): [True: 44.43%, False: 55.57%]
+  ------------------
+  |  Branch (115:9): [True: 44.55%, False: 55.45%]
+  ------------------
+  116|  96.5k|      if (l &lt;= u) {
+  ------------------
+  |  Branch (116:11): [True: 94.06%, False: 5.94%]
+  ------------------
+  |  Branch (116:11): [True: 93.97%, False: 6.03%]
+  ------------------
+  117|  90.7k|        t = (t + node[u].v) + node[node[u].r].s;
+  118|  90.7k|      }
+  119|  96.5k|      u = node[u].p;
+  120|   120k|    } else {
+  121|   120k|      if (v &lt;= r) {
+  ------------------
+  |  Branch (121:11): [True: 68.80%, False: 31.20%]
+  ------------------
+  |  Branch (121:11): [True: 68.95%, False: 31.05%]
+  ------------------
+  122|  82.9k|        x = node[v].t + x;
+  123|  82.9k|      }
+  124|   120k|      v = node[v].p;
+  125|   120k|    }
+  126|   216k|  }
+  127|  99.9k|  x = t + (node[u].v + x);
+  128|  99.9k|  return x;
+  129|  99.9k|}
+  ------------------
+  | vertex_set_path_composite-logn.cpp:_ZN12_GLOBAL__N_15applyIjEET_iiS1_:
+  |  110|  58.1k|template &lt;typename T&gt; T apply(int l, int r, T x) {
+  |  111|  58.1k|  Segment t = {1, 0, 0};
+  |  112|  58.1k|  int u = l;
+  |  113|  58.1k|  int v = r;
+  |  114|   166k|  while (u != v) {
+  |  ------------------
+  |  |  Branch (114:10): [True: 64.98%, False: 35.02%]
+  |  ------------------
+  |  115|   107k|    if (priority[u] &lt; priority[v]) {
+  |  ------------------
+  |  |  Branch (115:9): [True: 44.43%, False: 55.57%]
+  |  ------------------
+  |  116|  47.9k|      if (l &lt;= u) {
+  |  ------------------
+  |  |  Branch (116:11): [True: 94.06%, False: 5.94%]
+  |  ------------------
+  |  117|  45.1k|        t = (t + node[u].v) + node[node[u].r].s;
+  |  118|  45.1k|      }
+  |  119|  47.9k|      u = node[u].p;
+  |  120|  60.0k|    } else {
+  |  121|  60.0k|      if (v &lt;= r) {
+  |  ------------------
+  |  |  Branch (121:11): [True: 68.80%, False: 31.20%]
+  |  ------------------
+  |  122|  41.2k|        x = node[v].t + x;
+  |  123|  41.2k|      }
+  |  124|  60.0k|      v = node[v].p;
+  |  125|  60.0k|    }
+  |  126|   107k|  }
+  |  127|  58.1k|  x = t + (node[u].v + x);
+  |  128|  58.1k|  return x;
+  |  129|  58.1k|}
+  ------------------
+  | vertex_set_path_composite-logn.cpp:_ZN12_GLOBAL__N_15applyINS_7SegmentEEET_iiS2_:
+  |  110|  41.7k|template &lt;typename T&gt; T apply(int l, int r, T x) {
+  |  111|  41.7k|  Segment t = {1, 0, 0};
+  |  112|  41.7k|  int u = l;
+  |  113|  41.7k|  int v = r;
+  |  114|   150k|  while (u != v) {
+  |  ------------------
+  |  |  Branch (114:10): [True: 72.29%, False: 27.71%]
+  |  ------------------
+  |  115|   108k|    if (priority[u] &lt; priority[v]) {
+  |  ------------------
+  |  |  Branch (115:9): [True: 44.55%, False: 55.45%]
+  |  ------------------
+  |  116|  48.5k|      if (l &lt;= u) {
+  |  ------------------
+  |  |  Branch (116:11): [True: 93.97%, False: 6.03%]
+  |  ------------------
+  |  117|  45.6k|        t = (t + node[u].v) + node[node[u].r].s;
+  |  118|  45.6k|      }
+  |  119|  48.5k|      u = node[u].p;
+  |  120|  60.4k|    } else {
+  |  121|  60.4k|      if (v &lt;= r) {
+  |  ------------------
+  |  |  Branch (121:11): [True: 68.95%, False: 31.05%]
+  |  ------------------
+  |  122|  41.6k|        x = node[v].t + x;
+  |  123|  41.6k|      }
+  |  124|  60.4k|      v = node[v].p;
+  |  125|  60.4k|    }
+  |  126|   108k|  }
+  |  127|  41.7k|  x = t + (node[u].v + x);
+  |  128|  41.7k|  return x;
+  |  129|  41.7k|}
+  ------------------
+  130|       |
+  131|       |} // namespace
+  132|       |
+  133|      1|int main() {
+  134|      1|  rd rd;
+  135|      1|  wt wt;
+  136|      1|  int n = rd.uh();
+  137|      1|  int q = rd.uh();
+  138|      1|#ifdef LOCAL
+  139|      1|  id = 0;
+  140|      1|  std::memset(head, 0, 4 * n);
+  141|      1|  std::memset(heavy, 0, 4 * n);
+  142|      1|  std::memset(node, 0, (n + 1) * sizeof(Node));
+  143|      1|#endif
+  144|      1|  node[0].s.a = 1;
+  145|   200k|  for (int i = 0; i &lt; n; ++i) a[i] = rd.uw(), b[i] = rd.uw();
+                                       ^200k^200k
+  ------------------
+  |  Branch (145:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  146|   200k|  for (int i = 1; i &lt; n; ++i) {
+                                       ^199k
+  ------------------
+  |  Branch (146:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  147|   199k|    int u = rd.uh();
+  148|   199k|    int v = rd.uh();
+  149|   199k|    edge[i * 2 | 0] = {v, head[u]}, head[u] = i * 2 | 0;
+  150|   199k|    edge[i * 2 | 1] = {u, head[v]}, head[v] = i * 2 | 1;
+  151|   199k|  }
+  152|      1|  build_step_1(0, 0);
+  153|      1|  build_step_2(0, 0, 0, 0);
+  154|   200k|  for (int i = 1; i &lt;= n; ++i) {
+                                        ^200k
+  ------------------
+  |  Branch (154:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  155|   200k|    if (node[i].r == 0) {
+  ------------------
+  |  Branch (155:9): [True: 71.00%, False: 29.00%]
+  ------------------
+  156|   341k|      for (int u = i; u &amp;&amp; u &lt;= i; u = node[u].p) {
+                                         ^242k   ^200k
+  ------------------
+  |  Branch (156:23): [True: 70.78%, False: 29.22%]
+  |  Branch (156:28): [True: 82.62%, False: 17.38%]
+  ------------------
+  157|   200k|        maintain(u);
+  158|   200k|      }
+  159|   141k|    }
+  160|   200k|  }
+  161|   200k|  while (q--) {
+  ------------------
+  |  Branch (161:10): [True: 100.00%, False: 0.00%]
+  ------------------
+  162|   200k|    let t = rd.u1();
+  163|   200k|    if (t == 0) {
+  ------------------
+  |  Branch (163:9): [True: 50.02%, False: 49.98%]
+  ------------------
+  164|   100k|      int u = node2id[rd.uh()];
+  165|   100k|      node[u].v = {rd.uw(), rd.uw()};
+  166|   285k|      for (; u; u = node[u].p) {
+                              ^185k
+  ------------------
+  |  Branch (166:14): [True: 64.98%, False: 35.02%]
+  ------------------
+  167|   185k|        maintain(u);
+  168|   185k|      }
+  169|   100k|    }
+  170|   200k|    if (t == 1) {
+  ------------------
+  |  Branch (170:9): [True: 49.98%, False: 50.02%]
+  ------------------
+  171|  99.9k|      int u = node2id[rd.uh()];
+  172|  99.9k|      int v = node2id[rd.uh()];
+  173|  99.9k|      u32 x = rd.uw();
+  174|  99.9k|      Segment f = {1, 0, 0};
+  175|   896k|      while (ances[u] != ances[v]) {
+  ------------------
+  |  Branch (175:14): [True: 88.85%, False: 11.15%]
+  ------------------
+  176|   796k|        if (depth[ances[u]] &gt;= depth[ances[v]]) {
+  ------------------
+  |  Branch (176:13): [True: 49.96%, False: 50.04%]
+  ------------------
+  177|   398k|          x = apply(u, x);
+  178|   398k|          u = parent[ances[u]];
+  179|   398k|        } else {
+  180|   398k|          f = apply(v, f);
+  181|   398k|          v = parent[ances[v]];
+  182|   398k|        }
+  183|   796k|      }
+  184|  99.9k|      if (u &gt;= v) {
+  ------------------
+  |  Branch (184:11): [True: 58.21%, False: 41.79%]
+  ------------------
+  185|  58.1k|        x = apply(v, u, x);
+  186|  58.1k|      } else {
+  187|  41.7k|        f = apply(u, v, f);
+  188|  41.7k|      }
+  189|  99.9k|      x = x + f;
+  190|  99.9k|      wt.uw(x);
+  191|  99.9k|    }
+  192|   200k|  }
+  193|      1|  return 0;
+  194|      1|}
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../coverage/vertex_set_path_composite-logn/long-path-decomposition_killer_00.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../coverage/vertex_set_path_composite-logn/max_random_01.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../coverage/vertex_set_path_composite-logn/long-path-decomposition_killer_00.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../coverage/vertex_set_path_composite-logn/max_random_01.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

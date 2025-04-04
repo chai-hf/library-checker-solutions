@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>max_sparse_01</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <pre><code class="language-cpp">/tmp/solutions/build/predecessor_problem-main.cpp:
+    1|       |#include &lt;common.h&gt;
+    2|       |prelude;
+    3|       |
+    4|       |namespace {
+    5|       |
+    6|       |u64 root;
+    7|       |u64 lv18[39];
+    8|       |u64 lv12[2442];
+    9|       |u64 leaf[156250];
+   10|       |
+   11|      0|void set(u32 x) {
+   12|      0|  leaf[x &gt;&gt; 6] |= 1ull &lt;&lt; (x &amp; 63);
+   13|      0|  lv12[x &gt;&gt; 12] |= 1ull &lt;&lt; ((x &gt;&gt; 6) &amp; 63);
+   14|      0|  lv18[x &gt;&gt; 18] |= 1ull &lt;&lt; ((x &gt;&gt; 12) &amp; 63);
+   15|      0|  root |= 1ull &lt;&lt; (x &gt;&gt; 18);
+   16|      0|}
+   17|       |
+   18|      0|void unset(u32 x) {
+   19|      0|  if (!(leaf[x &gt;&gt; 6] &amp;= ~(1ull &lt;&lt; (x &amp; 63))))
+  ------------------
+  |  Branch (19:7): [True: 0.00%, False: 0.00%]
+  ------------------
+   20|      0|    if (!(lv12[x &gt;&gt; 12] &amp;= ~(1ull &lt;&lt; ((x &gt;&gt; 6) &amp; 63))))
+  ------------------
+  |  Branch (20:9): [True: 0.00%, False: 0.00%]
+  ------------------
+   21|      0|      if (!(lv18[x &gt;&gt; 18] &amp;= ~(1ull &lt;&lt; ((x &gt;&gt; 12) &amp; 63))))
+  ------------------
+  |  Branch (21:11): [True: 0.00%, False: 0.00%]
+  ------------------
+   22|      0|        root &amp;= ~(1ull &lt;&lt; (x &gt;&gt; 18));
+   23|      0|}
+   24|       |
+   25|      0|bool get(u32 x) { return leaf[x &gt;&gt; 6] &amp; (1ull &lt;&lt; (x &amp; 63)); }
+   26|       |
+   27|   499k|u32 nxt(u32 x) {
+   28|   499k|  if (u64 tmp = leaf[x &gt;&gt; 6] &amp; (-1ull &lt;&lt; (x &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (28:53): [True: 100.00%, False: 0.00%]
+  ------------------
+   29|   499k|    if (u64 tmp = lv12[x &gt;&gt; 12] &amp; (-2ull &lt;&lt; ((x &gt;&gt; 6) &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (29:63): [True: 99.85%, False: 0.15%]
+  ------------------
+   30|   499k|      if (u64 tmp = lv18[x &gt;&gt; 18] &amp; (-2ull &lt;&lt; ((x &gt;&gt; 12) &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (30:66): [True: 92.74%, False: 7.26%]
+  ------------------
+   31|   462k|        if (u64 tmp = root &amp; (-2ull &lt;&lt; (x &gt;&gt; 18)); !tmp) {
+  ------------------
+  |  Branch (31:52): [True: 28.69%, False: 71.31%]
+  ------------------
+   32|   132k|          return -1;
+   33|   330k|        } else {
+   34|   330k|          u32 ans = __builtin_ctzll(tmp);
+   35|   330k|          ans = ans &lt;&lt; 6 | __builtin_ctzll(lv18[ans]);
+   36|   330k|          ans = ans &lt;&lt; 6 | __builtin_ctzll(lv12[ans]);
+   37|   330k|          ans = ans &lt;&lt; 6 | __builtin_ctzll(leaf[ans]);
+   38|   330k|          return ans;
+   39|   330k|        }
+   40|   462k|      } else {
+   41|  36.2k|        u32 ans = (x &gt;&gt; 18) &lt;&lt; 6 | __builtin_ctzll(tmp);
+   42|  36.2k|        ans = ans &lt;&lt; 6 | __builtin_ctzll(lv12[ans]);
+   43|  36.2k|        ans = ans &lt;&lt; 6 | __builtin_ctzll(leaf[ans]);
+   44|  36.2k|        return ans;
+   45|  36.2k|      }
+   46|   499k|    } else {
+   47|    738|      u32 ans = (x &gt;&gt; 12) &lt;&lt; 6 | __builtin_ctzll(tmp);
+   48|    738|      ans = ans &lt;&lt; 6 | __builtin_ctzll(leaf[ans]);
+   49|    738|      return ans;
+   50|    738|    }
+   51|   499k|  } else {
+   52|      7|    u32 ans = (x &gt;&gt; 6) &lt;&lt; 6 | __builtin_ctzll(tmp);
+   53|      7|    return ans;
+   54|      7|  }
+   55|   499k|}
+   56|       |
+   57|   500k|u32 pre(u32 x) {
+   58|   500k|  if (u64 tmp = leaf[x &gt;&gt; 6] &amp; ~(-2ull &lt;&lt; (x &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (58:54): [True: 100.00%, False: 0.00%]
+  ------------------
+   59|   500k|    if (u64 tmp = lv12[x &gt;&gt; 12] &amp; ~(-1ull &lt;&lt; ((x &gt;&gt; 6) &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (59:64): [True: 99.86%, False: 0.14%]
+  ------------------
+   60|   499k|      if (u64 tmp = lv18[x &gt;&gt; 18] &amp; ~(-1ull &lt;&lt; ((x &gt;&gt; 12) &amp; 63)); !tmp) {
+  ------------------
+  |  Branch (60:67): [True: 89.13%, False: 10.87%]
+  ------------------
+   61|   445k|        if (u64 tmp = root &amp; ~(-1ull &lt;&lt; (x &gt;&gt; 18)); !tmp) {
+  ------------------
+  |  Branch (61:53): [True: 4.21%, False: 95.79%]
+  ------------------
+   62|  18.7k|          return -1;
+   63|   426k|        } else {
+   64|   426k|          u32 ans = 63 - __builtin_clzll(tmp);
+   65|   426k|          ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(lv18[ans]);
+   66|   426k|          ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(lv12[ans]);
+   67|   426k|          ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(leaf[ans]);
+   68|   426k|          return ans;
+   69|   426k|        }
+   70|   445k|      } else {
+   71|  54.2k|        u32 ans = (x &gt;&gt; 18) &lt;&lt; 6 | 63 - __builtin_clzll(tmp);
+   72|  54.2k|        ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(lv12[ans]);
+   73|  54.2k|        ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(leaf[ans]);
+   74|  54.2k|        return ans;
+   75|  54.2k|      }
+   76|   499k|    } else {
+   77|    710|      u32 ans = (x &gt;&gt; 12) &lt;&lt; 6 | 63 - __builtin_clzll(tmp);
+   78|    710|      ans = ans &lt;&lt; 6 | 63 - __builtin_clzll(leaf[ans]);
+   79|    710|      return ans;
+   80|    710|    }
+   81|   500k|  } else {
+   82|     17|    u32 ans = (x &gt;&gt; 6) &lt;&lt; 6 | 63 - __builtin_clzll(tmp);
+   83|     17|    return ans;
+   84|     17|  }
+   85|   500k|}
+   86|       |
+   87|       |} // namespace
+   88|       |
+   89|      1|int main() {
+   90|      1|  rd rd;
+   91|      1|  wt wt;
+   92|      1|  int n = rd.uh();
+   93|      1|  int q = rd.uh();
+   94|      1|#ifdef LOCAL
+   95|      1|  root = 0;
+   96|      1|  std::memset(lv18, 0, sizeof(lv18));
+   97|      1|  std::memset(lv12, 0, sizeof(lv12));
+   98|      1|  std::memset(leaf, 0, sizeof(leaf));
+   99|      1|#endif
+  100|      1|  int i = 0;
+  101|   156k|  for (; i + 64 &lt; n; i += 64) {
+                                   ^156k
+  ------------------
+  |  Branch (101:10): [True: 100.00%, False: 0.00%]
+  ------------------
+  102|   156k|    u32 a = _mm256_movemask_epi8(_mm256_cmpeq_epi8(
+  103|   156k|        _mm256_loadu_si256(reinterpret_cast&lt;const __m256i_u *&gt;(rd.p + i)),
+  104|   156k|        _mm256_set1_epi8('1')));
+  105|   156k|    u32 b = _mm256_movemask_epi8(_mm256_cmpeq_epi8(
+  106|   156k|        _mm256_loadu_si256(reinterpret_cast&lt;const __m256i_u *&gt;(rd.p + i + 32)),
+  107|   156k|        _mm256_set1_epi8('1')));
+  108|   156k|    leaf[i &gt;&gt; 6] = a | u64(b) &lt;&lt; 32;
+  109|   156k|  }
+  110|     65|  for (; i &lt; n; ++i) leaf[i &gt;&gt; 6] |= u64(rd.p[i] - '0') &lt;&lt; (i &amp; 63);
+                              ^64  ^64
+  ------------------
+  |  Branch (110:10): [True: 98.46%, False: 1.54%]
+  ------------------
+  111|   156k|  for (int i = 0; i &lt;= (n - 1) / 64; ++i)
+                                                   ^156k
+  ------------------
+  |  Branch (111:19): [True: 100.00%, False: 0.00%]
+  ------------------
+  112|   156k|    lv12[i &gt;&gt; 6] |= u64(!!leaf[i]) &lt;&lt; (i &amp; 63);
+  113|  2.44k|  for (int i = 0; i &lt;= (n - 1) / 64 / 64; ++i)
+                                                        ^2.44k
+  ------------------
+  |  Branch (113:19): [True: 99.96%, False: 0.04%]
+  ------------------
+  114|  2.44k|    lv18[i &gt;&gt; 6] |= u64(!!lv12[i]) &lt;&lt; (i &amp; 63);
+  115|     40|  for (int i = 0; i &lt;= (n - 1) / 64 / 64 / 64; ++i)
+                                                             ^39
+  ------------------
+  |  Branch (115:19): [True: 97.50%, False: 2.50%]
+  ------------------
+  116|     39|    root |= u64(!!lv18[i]) &lt;&lt; (i &amp; 63);
+  117|      1|  rd.p += n + 1;
+  118|  1.00M|  while (q--) {
+  ------------------
+  |  Branch (118:10): [True: 100.00%, False: 0.00%]
+  ------------------
+  119|  1.00M|    let t = rd.u1();
+  120|  1.00M|    let k = rd.uh();
+  121|  1.00M|    if (t == 0) {
+  ------------------
+  |  Branch (121:9): [True: 0.00%, False: 100.00%]
+  ------------------
+  122|      0|      set(k);
+  123|      0|    }
+  124|  1.00M|    if (t == 1) {
+  ------------------
+  |  Branch (124:9): [True: 0.00%, False: 100.00%]
+  ------------------
+  125|      0|      unset(k);
+  126|      0|    }
+  127|  1.00M|    if (t == 2) {
+  ------------------
+  |  Branch (127:9): [True: 0.00%, False: 100.00%]
+  ------------------
+  128|      0|      let x = get(k);
+  129|      0|      wt.uw(x);
+  130|      0|    }
+  131|  1.00M|    if (t == 3) {
+  ------------------
+  |  Branch (131:9): [True: 49.98%, False: 50.02%]
+  ------------------
+  132|   499k|      let x = nxt(k);
+  133|   499k|      if (~x) {
+  ------------------
+  |  Branch (133:11): [True: 73.44%, False: 26.56%]
+  ------------------
+  134|   367k|        wt.uw(x);
+  135|   367k|      } else {
+  136|   132k|        wt.puts(" -1", 3);
+  137|   132k|      }
+  138|   499k|    }
+  139|  1.00M|    if (t == 4) {
+  ------------------
+  |  Branch (139:9): [True: 50.02%, False: 49.98%]
+  ------------------
+  140|   500k|      let x = pre(k);
+  141|   500k|      if (~x) {
+  ------------------
+  |  Branch (141:11): [True: 96.26%, False: 3.74%]
+  ------------------
+  142|   481k|        wt.uw(x);
+  143|   481k|      } else {
+  144|  18.7k|        wt.puts(" -1", 3);
+  145|  18.7k|      }
+  146|   500k|    }
+  147|  1.00M|  }
+  148|      1|  return 0;
+  149|      1|}
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../coverage/predecessor_problem-main/max_sparse_00.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../coverage/predecessor_problem-main/medium_00.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../coverage/predecessor_problem-main/max_sparse_00.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../coverage/predecessor_problem-main/medium_00.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>small_02</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <pre><code class="language-cpp">/tmp/solutions/build/vertex_add_path_sum-slow.cpp:
+    1|       |#include &lt;common.h&gt;
+    2|       |#include &lt;toy/bit.h&gt;
+    3|       |prelude;
+    4|       |
+    5|       |namespace {
+    6|       |
+    7|       |constexpr int N = 5e5;
+    8|       |
+    9|       |int head[N];
+   10|       |struct {
+   11|       |  int to;
+   12|       |  int next;
+   13|       |} edge[N * 2];
+   14|       |int p[N];
+   15|       |int l[N];
+   16|       |int r[N];
+   17|       |int a[N];
+   18|       |u64 b[N + 1];
+   19|       |u64 c[N + 2];
+   20|       |int id;
+   21|       |
+   22|     88|void dfs(int u, int w) {
+   23|     88|  p[u] = w;
+   24|     88|  l[u] = ++id;
+   25|     88|  c[id] += b[id] = a[u];
+   26|    262|  for (int e = head[u]; e; e = edge[e].next) {
+                                         ^174
+  ------------------
+  |  Branch (26:25): [True: 66.41%, False: 33.59%]
+  ------------------
+   27|    174|    int v = edge[e].to;
+   28|    174|    if (v != w) {
+  ------------------
+  |  Branch (28:9): [True: 50.00%, False: 50.00%]
+  ------------------
+   29|     87|      dfs(v, u);
+   30|     87|    }
+   31|    174|  }
+   32|     88|  c[r[u] = id + 1] -= a[u];
+   33|     88|}
+   34|       |
+   35|       |} // namespace
+   36|       |
+   37|      1|int main() {
+   38|      1|  rd rd;
+   39|      1|  wt wt;
+   40|      1|  int n = rd.uh();
+   41|      1|  int q = rd.uh();
+   42|      1|#ifdef LOCAL
+   43|      1|  id = 0;
+   44|      1|  std::memset(head, 0, 4 * n);
+   45|      1|  std::memset(c, 0, 8 * n + 16);
+   46|      1|#endif
+   47|     89|  for (int i = 0; i &lt; n; ++i) a[i] = rd.uw();
+                                       ^88  ^88
+  ------------------
+  |  Branch (47:19): [True: 98.88%, False: 1.12%]
+  ------------------
+   48|     88|  for (int i = 1; i &lt; n; ++i) {
+                                       ^87
+  ------------------
+  |  Branch (48:19): [True: 98.86%, False: 1.14%]
+  ------------------
+   49|     87|    int u = rd.uh();
+   50|     87|    int v = rd.uh();
+   51|     87|    edge[i * 2 | 0] = {v, head[u]}, head[u] = i * 2 | 0;
+   52|     87|    edge[i * 2 | 1] = {u, head[v]}, head[v] = i * 2 | 1;
+   53|     87|  }
+   54|      1|  dfs(0, -1);
+   55|      1|  u64 sum = 0;
+   56|     89|  for (int i = 1; i &lt;= n; ++i) c[i] = sum += c[i];
+                                        ^88  ^88
+  ------------------
+  |  Branch (56:19): [True: 98.88%, False: 1.12%]
+  ------------------
+   57|     89|  for (int i = n; i &gt;= 1; --i) c[i] -= c[i - (i &amp; -i)];
+                                        ^88  ^88
+  ------------------
+  |  Branch (57:19): [True: 98.88%, False: 1.12%]
+  ------------------
+   58|      1|  int val[n + 1];
+   59|     88|  for (int i = 1; i &lt; n; ++i) val[l[i]] = l[p[i]];
+                                       ^87  ^87
+  ------------------
+  |  Branch (59:19): [True: 98.86%, False: 1.14%]
+  ------------------
+   60|      1|  ++n;
+   61|      1|  int m = n / 64 + 1;
+   62|      1|  int len = log(m) + 1;
+   63|      1|  int table[len][m];
+   64|      1|  int suf[n];
+   65|      1|  int pre[n];
+   66|     90|  for (int min, i = 0; i &lt; n; ++i) {
+                                            ^89
+  ------------------
+  |  Branch (66:24): [True: 98.89%, False: 1.11%]
+  ------------------
+   67|     89|    int id = i &amp; 63;
+   68|     89|    int value = pre[i] = val[i];
+   69|     89|    suf[i] = min = id ? std::min(min, value) : value;
+                                      ^87                    ^2
+  ------------------
+  |  Branch (69:20): [True: 97.75%, False: 2.25%]
+  ------------------
+   70|     89|    if (id == 63) table[0][i / 64] = suf[i];
+                                ^1
+  ------------------
+  |  Branch (70:9): [True: 1.12%, False: 98.88%]
+  ------------------
+   71|     89|  }
+   72|     89|  for (int min, i = n - 2; i &gt;= 0; --i) {
+                                                 ^88
+  ------------------
+  |  Branch (72:28): [True: 98.88%, False: 1.12%]
+  ------------------
+   73|     88|    int id = ~i &amp; 63;
+   74|     88|    int value = pre[i];
+   75|     88|    pre[i] = min = id ? std::min(min, value) : value;
+                                      ^87                    ^1
+  ------------------
+  |  Branch (75:20): [True: 98.86%, False: 1.14%]
+  ------------------
+   76|     88|  }
+   77|      2|  for (int i = 1; i &lt; len; ++i) {
+                                         ^1
+  ------------------
+  |  Branch (77:19): [True: 50.00%, False: 50.00%]
+  ------------------
+   78|      2|    for (int j = 0, k = 1 &lt;&lt; (i - 1); k &lt; m; ++j, ++k) {
+                                                           ^1
+  ------------------
+  |  Branch (78:39): [True: 50.00%, False: 50.00%]
+  ------------------
+   79|      1|      table[i][j] = std::min(table[i - 1][j], table[i - 1][k]);
+   80|      1|    }
+   81|      1|  }
+   82|    396|  while (q--) {
+  ------------------
+  |  Branch (82:10): [True: 99.75%, False: 0.25%]
+  ------------------
+   83|    395|    let t = rd.u1();
+   84|    395|    if (t == 0) {
+  ------------------
+  |  Branch (84:9): [True: 51.90%, False: 48.10%]
+  ------------------
+   85|    205|      int k = rd.uh();
+   86|    205|      int x = rd.uw();
+   87|    205|      int u = l[k];
+   88|    205|      int v = r[k];
+   89|    205|      b[u] += x;
+   90|    952|      for (; u &lt;= n; u += u &amp; -u) c[u] += x;
+                                   ^747         ^747
+  ------------------
+  |  Branch (90:14): [True: 78.47%, False: 21.53%]
+  ------------------
+   91|    908|      for (; v &lt;= n; v += v &amp; -v) c[v] -= x;
+                                   ^703         ^703
+  ------------------
+  |  Branch (91:14): [True: 77.42%, False: 22.58%]
+  ------------------
+   92|    205|    }
+   93|    395|    if (t == 1) {
+  ------------------
+  |  Branch (93:9): [True: 48.10%, False: 51.90%]
+  ------------------
+   94|    190|      int u = l[rd.uh()];
+   95|    190|      int v = l[rd.uh()];
+   96|    190|      if (u == v) {
+  ------------------
+  |  Branch (96:11): [True: 0.53%, False: 99.47%]
+  ------------------
+   97|      1|        wt.ud(b[u]);
+   98|      1|        continue;
+   99|      1|      }
+  100|    189|      int l = std::min(u, v) + 1;
+  101|    189|      int r = std::max(u, v);
+  102|    189|      int L = l / 64;
+  103|    189|      int R = r / 64;
+  104|    189|      int w;
+  105|    189|      if (L &lt; R - 1) {
+  ------------------
+  |  Branch (105:11): [True: 0.00%, False: 100.00%]
+  ------------------
+  106|      0|        int p = pre[l];
+  107|      0|        int s = suf[r];
+  108|      0|        w = std::min(p, s);
+  109|      0|        int k = log(R - L - 1);
+  110|      0|        int a = table[k][L + 1];
+  111|      0|        int b = table[k][R - (1 &lt;&lt; k)];
+  112|      0|        int tmp = std::min(a, b);
+  113|      0|        w = std::min(w, tmp);
+  114|    189|      } else if (L == R - 1) {
+  ------------------
+  |  Branch (114:18): [True: 47.09%, False: 52.91%]
+  ------------------
+  115|     89|        int p = pre[l];
+  116|     89|        int s = suf[r];
+  117|     89|        w = std::min(p, s);
+  118|    100|      } else {
+  119|    100|        w = val[l];
+  120|  1.84k|        for (int i = l + 1; i &lt;= r; ++i) w = std::min(w, val[i]);
+                                                  ^1.74k^1.74k
+  ------------------
+  |  Branch (120:29): [True: 94.57%, False: 5.43%]
+  ------------------
+  121|    100|      }
+  122|    189|      u64 sum = b[w];
+  123|    189|      --l;
+  124|    710|      for (; l; l -= l &amp; -l) sum += c[l];
+                              ^521         ^521
+  ------------------
+  |  Branch (124:14): [True: 73.38%, False: 26.62%]
+  ------------------
+  125|    809|      for (; r; r -= r &amp; -r) sum += c[r];
+                              ^620         ^620
+  ------------------
+  |  Branch (125:14): [True: 76.64%, False: 23.36%]
+  ------------------
+  126|    709|      for (; w; w -= w &amp; -w) sum -= c[w] * 2;
+                              ^520         ^520
+  ------------------
+  |  Branch (126:14): [True: 73.34%, False: 26.66%]
+  ------------------
+  127|    189|      wt.ud(sum);
+  128|    189|    }
+  129|    395|  }
+  130|      1|  return 0;
+  131|      1|}
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../coverage/vertex_add_path_sum-slow/small_01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../coverage/vertex_add_path_sum-slow/small_03.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../coverage/vertex_add_path_sum-slow/small_01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../coverage/vertex_add_path_sum-slow/small_03.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
