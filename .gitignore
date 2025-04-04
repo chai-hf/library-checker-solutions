@@ -1,5 +1,6 @@
 .cache
 build
+gh-pages
 coverage
 compile_commands.json
 *.cpp.c++

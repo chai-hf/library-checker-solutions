@@ -1,0 +1,15 @@
+[book]
+src = "docs"
+
+[build]
+build-dir = "gh-pages"
+
+[output.html]
+no-section-label = true
+git-repository-url = "https://github.com/chai-hf/library-checker-solutions"
+
+[output.html.fold]
+enable = true
+
+[output.html.search]
+enable = false
