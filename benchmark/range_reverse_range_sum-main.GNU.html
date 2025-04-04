@@ -1,0 +1,618 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>range_reverse_range_sum-main.GNU</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="https://github.com/chai-hf/library-checker-solutions" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div class="table-wrapper"><table><thead><tr><th style="text-align: left">Name</th><th style="text-align: right">Time (ms)</th><th style="text-align: right">Memory (KB)</th></tr></thead><tbody>
+<tr><td style="text-align: left">Sum</td><td style="text-align: right">2,691.20</td><td style="text-align: right">142,284</td></tr>
+<tr><td style="text-align: left">All</td><td style="text-align: right">2,652.16</td><td style="text-align: right">12,336</td></tr>
+<tr><td style="text-align: left">Max</td><td style="text-align: right">337.68</td><td style="text-align: right">11,512</td></tr>
+<tr><td style="text-align: left">Geometric Mean</td><td style="text-align: right">22.43</td><td style="text-align: right">6,155</td></tr>
+<tr><td style="text-align: left">almost_t0_00</td><td style="text-align: right">337.68</td><td style="text-align: right">11,380</td></tr>
+<tr><td style="text-align: left">almost_t1_00</td><td style="text-align: right">295.42</td><td style="text-align: right">10,852</td></tr>
+<tr><td style="text-align: left">max_random_00</td><td style="text-align: right">334.76</td><td style="text-align: right">11,512</td></tr>
+<tr><td style="text-align: left">max_random_01</td><td style="text-align: right">334.51</td><td style="text-align: right">11,512</td></tr>
+<tr><td style="text-align: left">max_random_02</td><td style="text-align: right">330.85</td><td style="text-align: right">11,512</td></tr>
+<tr><td style="text-align: left">random_00</td><td style="text-align: right">296.94</td><td style="text-align: right">10,792</td></tr>
+<tr><td style="text-align: left">random_01</td><td style="text-align: right">206.16</td><td style="text-align: right">11,268</td></tr>
+<tr><td style="text-align: left">random_02</td><td style="text-align: right">306.82</td><td style="text-align: right">11,040</td></tr>
+<tr><td style="text-align: left">small_random_00</td><td style="text-align: right">95.66</td><td style="text-align: right">5,084</td></tr>
+<tr><td style="text-align: left">small_random_01</td><td style="text-align: right">53.64</td><td style="text-align: right">4,448</td></tr>
+<tr><td style="text-align: left">small_random_02</td><td style="text-align: right">77.72</td><td style="text-align: right">5,100</td></tr>
+<tr><td style="text-align: left">nq_01_00</td><td style="text-align: right">0.64</td><td style="text-align: right">2,960</td></tr>
+<tr><td style="text-align: left">nq_01_01</td><td style="text-align: right">0.67</td><td style="text-align: right">2,960</td></tr>
+<tr><td style="text-align: left">nq_01_02</td><td style="text-align: right">4.62</td><td style="text-align: right">4,188</td></tr>
+<tr><td style="text-align: left">nq_01_03</td><td style="text-align: right">0.66</td><td style="text-align: right">2,960</td></tr>
+<tr><td style="text-align: left">nq_01_04</td><td style="text-align: right">0.63</td><td style="text-align: right">2,992</td></tr>
+<tr><td style="text-align: left">nq_01_05</td><td style="text-align: right">5.99</td><td style="text-align: right">3,952</td></tr>
+<tr><td style="text-align: left">nq_01_06</td><td style="text-align: right">3.37</td><td style="text-align: right">7,424</td></tr>
+<tr><td style="text-align: left">nq_01_07</td><td style="text-align: right">3.88</td><td style="text-align: right">7,388</td></tr>
+<tr><td style="text-align: left">example_00</td><td style="text-align: right">0.58</td><td style="text-align: right">2,960</td></tr>
+</tbody></table>
+</div>
+<p>=== ALL ===</p>
+<pre><code>2.63user 0.01system 0:02.65elapsed 99%CPU (0avgtext+0avgdata 12336maxresident)k
+0inputs+0outputs (0major+1048minor)pagefaults 0swaps
+
+           2652.16 msec task-clock                       #    1.000 CPUs utilized            ( +-  0.01% )
+                 5      context-switches                 #    1.885 /sec                     ( +-  3.58% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+              1029      page-faults                      #  387.941 /sec                   
+        5027312221      cycles                           #    1.895 GHz                      ( +-  0.01% )
+        4332552726      instructions                     #    0.86  insn per cycle           ( +-  0.00% )
+         481605727      branches                         #  181.569 M/sec                    ( +-  0.00% )
+          61410324      branch-misses                    #   12.75% of all branches          ( +-  0.01% )
+        1483571986      L1-dcache-loads                  #  559.319 M/sec                    ( +-  0.00% )
+         152159593      L1-dcache-load-misses            #   10.26% of all L1-dcache accesses  ( +-  0.00% )
+          62527111      LLC-loads                        #   23.573 M/sec                    ( +-  0.03% )
+             26051      LLC-load-misses                  #    0.04% of all LL-cache accesses  ( +-  1.93% )
+
+          2.653013 +- 0.000145 seconds time elapsed  ( +-  0.01% )
+</code></pre>
+<p>=== almost_t0_00 ===</p>
+<pre><code>0.34user 0.00system 0:00.34elapsed 100%CPU (0avgtext+0avgdata 11380maxresident)k
+0inputs+0outputs (0major+162minor)pagefaults 0swaps
+
+            337.68 msec task-clock                       #    0.994 CPUs utilized            ( +-  0.13% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               143      page-faults                      #  421.649 /sec                   
+         640093522      cycles                           #    1.887 GHz                      ( +-  0.13% )
+         511457099      instructions                     #    0.80  insn per cycle           ( +-  0.00% )
+          55837836      branches                         #  164.643 M/sec                    ( +-  0.00% )
+           7479041      branch-misses                    #   13.39% of all branches          ( +-  0.01% )
+         176808859      L1-dcache-loads                  #  521.338 M/sec                    ( +-  0.00% )
+          21120241      L1-dcache-load-misses            #   11.95% of all L1-dcache accesses  ( +-  0.05% )
+           9041941      LLC-loads                        #   26.661 M/sec                    ( +-  0.14% )
+              4674      LLC-load-misses                  #    0.05% of all LL-cache accesses  ( +-  0.76% )
+
+          0.339642 +- 0.000427 seconds time elapsed  ( +-  0.13% )
+</code></pre>
+<p>=== almost_t1_00 ===</p>
+<pre><code>0.29user 0.00system 0:00.29elapsed 99%CPU (0avgtext+0avgdata 10852maxresident)k
+0inputs+0outputs (0major+413minor)pagefaults 0swaps
+
+            295.42 msec task-clock                       #    1.005 CPUs utilized            ( +-  0.12% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               394      page-faults                      #    1.342 K/sec                  
+         559978797      cycles                           #    1.907 GHz                      ( +-  0.12% )
+         488715354      instructions                     #    0.88  insn per cycle           ( +-  0.00% )
+          55689777      branches                         #  189.689 M/sec                    ( +-  0.00% )
+           5868285      branch-misses                    #   10.54% of all branches          ( +-  0.02% )
+         168668945      L1-dcache-loads                  #  574.515 M/sec                    ( +-  0.00% )
+          19196861      L1-dcache-load-misses            #   11.38% of all L1-dcache accesses  ( +-  0.04% )
+           7055246      LLC-loads                        #   24.031 M/sec                    ( +-  0.03% )
+              5687      LLC-load-misses                  #    0.08% of all LL-cache accesses  ( +-  0.83% )
+
+          0.294086 +- 0.000359 seconds time elapsed  ( +-  0.12% )
+</code></pre>
+<p>=== max_random_00 ===</p>
+<pre><code>0.33user 0.00system 0:00.33elapsed 99%CPU (0avgtext+0avgdata 11512maxresident)k
+0inputs+0outputs (0major+413minor)pagefaults 0swaps
+
+            334.76 msec task-clock                       #    1.005 CPUs utilized            ( +-  0.13% )
+                 2      context-switches                 #    6.011 /sec                     ( +-  8.96% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+               394      page-faults                      #    1.184 K/sec                  
+         634536063      cycles                           #    1.907 GHz                      ( +-  0.13% )
+         512193312      instructions                     #    0.81  insn per cycle           ( +-  0.00% )
+          56302073      branches                         #  169.226 M/sec                    ( +-  0.00% )
+           7442628      branch-misses                    #   13.22% of all branches          ( +-  0.02% )
+         176211838      L1-dcache-loads                  #  529.637 M/sec                    ( +-  0.00% )
+          20828663      L1-dcache-load-misses            #   11.82% of all L1-dcache accesses  ( +-  0.05% )
+           8615724      LLC-loads                        #   25.896 M/sec                    ( +-  0.14% )
+              5644      LLC-load-misses                  #    0.07% of all LL-cache accesses  ( +-  1.18% )
+
+          0.333205 +- 0.000431 seconds time elapsed  ( +-  0.13% )
+</code></pre>
+<p>=== max_random_01 ===</p>
+<pre><code>0.32user 0.00system 0:00.33elapsed 99%CPU (0avgtext+0avgdata 11512maxresident)k
+0inputs+0outputs (0major+413minor)pagefaults 0swaps
+
+            334.51 msec task-clock                       #    1.000 CPUs utilized            ( +-  0.10% )
+                 1      context-switches                 #    2.995 /sec                     ( +- 28.35% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+               394      page-faults                      #    1.180 K/sec                  
+         634053131      cycles                           #    1.899 GHz                      ( +-  0.10% )
+         512233428      instructions                     #    0.81  insn per cycle           ( +-  0.00% )
+          56299367      branches                         #  168.644 M/sec                    ( +-  0.00% )
+           7444191      branch-misses                    #   13.22% of all branches          ( +-  0.02% )
+         176224469      L1-dcache-loads                  #  527.879 M/sec                    ( +-  0.00% )
+          20788793      L1-dcache-load-misses            #   11.80% of all L1-dcache accesses  ( +-  0.04% )
+           8593415      LLC-loads                        #   25.742 M/sec                    ( +-  0.09% )
+              5519      LLC-load-misses                  #    0.06% of all LL-cache accesses  ( +-  0.95% )
+
+          0.334472 +- 0.000344 seconds time elapsed  ( +-  0.10% )
+</code></pre>
+<p>=== max_random_02 ===</p>
+<pre><code>0.33user 0.00system 0:00.33elapsed 99%CPU (0avgtext+0avgdata 11512maxresident)k
+0inputs+0outputs (0major+413minor)pagefaults 0swaps
+
+            330.85 msec task-clock                       #    0.994 CPUs utilized            ( +-  0.12% )
+                 2      context-switches                 #    6.018 /sec                     ( +-  6.88% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+               394      page-faults                      #    1.185 K/sec                  
+         627108823      cycles                           #    1.887 GHz                      ( +-  0.12% )
+         511804189      instructions                     #    0.81  insn per cycle           ( +-  0.00% )
+          56254739      branches                         #  169.257 M/sec                    ( +-  0.00% )
+           7444040      branch-misses                    #   13.23% of all branches          ( +-  0.02% )
+         176070547      L1-dcache-loads                  #  529.755 M/sec                    ( +-  0.00% )
+          20710298      L1-dcache-load-misses            #   11.76% of all L1-dcache accesses  ( +-  0.04% )
+           8700504      LLC-loads                        #   26.178 M/sec                    ( +-  0.12% )
+              5451      LLC-load-misses                  #    0.06% of all LL-cache accesses  ( +-  1.11% )
+
+          0.332871 +- 0.000404 seconds time elapsed  ( +-  0.12% )
+</code></pre>
+<p>=== random_00 ===</p>
+<pre><code>0.29user 0.00system 0:00.29elapsed 100%CPU (0avgtext+0avgdata 10792maxresident)k
+0inputs+0outputs (0major+396minor)pagefaults 0swaps
+
+            296.94 msec task-clock                       #    0.998 CPUs utilized            ( +-  0.01% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               377      page-faults                      #    1.270 K/sec                  
+         562854290      cycles                           #    1.896 GHz                      ( +-  0.01% )
+         461276992      instructions                     #    0.82  insn per cycle           ( +-  0.00% )
+          50810078      branches                         #  171.120 M/sec                    ( +-  0.00% )
+           6752147      branch-misses                    #   13.29% of all branches          ( +-  0.01% )
+         159573721      L1-dcache-loads                  #  537.417 M/sec                    ( +-  0.00% )
+          18536372      L1-dcache-load-misses            #   11.62% of all L1-dcache accesses  ( +-  0.01% )
+           7544965      LLC-loads                        #   25.410 M/sec                    ( +-  0.03% )
+              4316      LLC-load-misses                  #    0.06% of all LL-cache accesses  ( +-  0.73% )
+
+         0.2974198 +- 0.0000210 seconds time elapsed  ( +-  0.01% )
+</code></pre>
+<p>=== random_01 ===</p>
+<pre><code>0.20user 0.00system 0:00.20elapsed 100%CPU (0avgtext+0avgdata 11268maxresident)k
+0inputs+0outputs (0major+391minor)pagefaults 0swaps
+
+            206.16 msec task-clock                       #    0.997 CPUs utilized            ( +-  0.01% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               372      page-faults                      #    1.804 K/sec                  
+         390774462      cycles                           #    1.895 GHz                      ( +-  0.01% )
+         325162105      instructions                     #    0.83  insn per cycle           ( +-  0.00% )
+          35788260      branches                         #  173.566 M/sec                    ( +-  0.00% )
+           4659413      branch-misses                    #   13.02% of all branches          ( +-  0.01% )
+         111141408      L1-dcache-loads                  #  539.013 M/sec                    ( +-  0.00% )
+          12793122      L1-dcache-load-misses            #   11.51% of all L1-dcache accesses  ( +-  0.00% )
+           5167017      LLC-loads                        #   25.059 M/sec                    ( +-  0.03% )
+              3924      LLC-load-misses                  #    0.08% of all LL-cache accesses  ( +-  0.53% )
+
+         0.2066887 +- 0.0000171 seconds time elapsed  ( +-  0.01% )
+</code></pre>
+<p>=== random_02 ===</p>
+<pre><code>0.30user 0.00system 0:00.31elapsed 99%CPU (0avgtext+0avgdata 11040maxresident)k
+0inputs+0outputs (0major+402minor)pagefaults 0swaps
+
+            306.82 msec task-clock                       #    0.994 CPUs utilized            ( +-  0.12% )
+                 2      context-switches                 #    6.488 /sec                     ( +-  8.01% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+               383      page-faults                      #    1.242 K/sec                  
+         581563242      cycles                           #    1.886 GHz                      ( +-  0.12% )
+         474981167      instructions                     #    0.81  insn per cycle           ( +-  0.00% )
+          52291115      branches                         #  169.623 M/sec                    ( +-  0.00% )
+           6967049      branch-misses                    #   13.32% of all branches          ( +-  0.02% )
+         163967299      L1-dcache-loads                  #  531.882 M/sec                    ( +-  0.00% )
+          19126742      L1-dcache-load-misses            #   11.67% of all L1-dcache accesses  ( +-  0.05% )
+           7886029      LLC-loads                        #   25.581 M/sec                    ( +-  0.11% )
+              4156      LLC-load-misses                  #    0.05% of all LL-cache accesses  ( +-  0.50% )
+
+          0.308777 +- 0.000359 seconds time elapsed  ( +-  0.12% )
+</code></pre>
+<p>=== small_random_00 ===</p>
+<pre><code>0.09user 0.00system 0:00.09elapsed 97%CPU (0avgtext+0avgdata 5084maxresident)k
+0inputs+0outputs (0major+337minor)pagefaults 0swaps
+
+             95.66 msec task-clock                       #    0.994 CPUs utilized            ( +-  0.04% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               318      page-faults                      #    3.321 K/sec                  
+         181318953      cycles                           #    1.894 GHz                      ( +-  0.04% )
+         208876318      instructions                     #    1.15  insn per cycle           ( +-  0.00% )
+          24302381      branches                         #  253.805 M/sec                    ( +-  0.00% )
+           3016281      branch-misses                    #   12.41% of all branches          ( +-  0.02% )
+          70965727      L1-dcache-loads                  #  741.139 M/sec                    ( +-  0.00% )
+            409396      L1-dcache-load-misses            #    0.58% of all L1-dcache accesses  ( +-  0.03% )
+             10376      LLC-loads                        #  108.363 K/sec                    ( +-  3.12% )
+               989      LLC-load-misses                  #    8.52% of all LL-cache accesses  ( +-  7.26% )
+
+         0.0962209 +- 0.0000442 seconds time elapsed  ( +-  0.05% )
+</code></pre>
+<p>=== small_random_01 ===</p>
+<pre><code>0.05user 0.00system 0:00.05elapsed 100%CPU (0avgtext+0avgdata 4448maxresident)k
+0inputs+0outputs (0major+261minor)pagefaults 0swaps
+
+             53.64 msec task-clock                       #    0.991 CPUs utilized            ( +-  0.04% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               242      page-faults                      #    4.508 K/sec                  
+         101661409      cycles                           #    1.894 GHz                      ( +-  0.04% )
+         116262764      instructions                     #    1.14  insn per cycle           ( +-  0.00% )
+          13694355      branches                         #  255.093 M/sec                    ( +-  0.00% )
+           1704322      branch-misses                    #   12.45% of all branches          ( +-  0.02% )
+          39229923      L1-dcache-loads                  #  730.760 M/sec                    ( +-  0.00% )
+            247192      L1-dcache-load-misses            #    0.63% of all L1-dcache accesses  ( +-  0.04% )
+              6786      LLC-loads                        #  126.407 K/sec                    ( +-  0.88% )
+               689      LLC-load-misses                  #   10.44% of all LL-cache accesses  ( +-  9.09% )
+
+         0.0541172 +- 0.0000268 seconds time elapsed  ( +-  0.05% )
+</code></pre>
+<p>=== small_random_02 ===</p>
+<pre><code>0.07user 0.00system 0:00.07elapsed 100%CPU (0avgtext+0avgdata 5100maxresident)k
+0inputs+0outputs (0major+332minor)pagefaults 0swaps
+
+             77.72 msec task-clock                       #    0.993 CPUs utilized            ( +-  0.06% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               313      page-faults                      #    4.026 K/sec                  
+         147310031      cycles                           #    1.895 GHz                      ( +-  0.06% )
+         168868810      instructions                     #    1.15  insn per cycle           ( +-  0.00% )
+          19826396      branches                         #  254.994 M/sec                    ( +-  0.00% )
+           2476672      branch-misses                    #   12.49% of all branches          ( +-  0.03% )
+          57062644      L1-dcache-loads                  #  733.903 M/sec                    ( +-  0.00% )
+            320127      L1-dcache-load-misses            #    0.56% of all L1-dcache accesses  ( +-  0.05% )
+              8107      LLC-loads                        #  104.267 K/sec                    ( +-  1.35% )
+               959      LLC-load-misses                  #   11.50% of all LL-cache accesses  ( +-  6.92% )
+
+         0.0782499 +- 0.0000465 seconds time elapsed  ( +-  0.06% )
+</code></pre>
+<p>=== nq_01_00 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 91%CPU (0avgtext+0avgdata 2960maxresident)k
+0inputs+0outputs (0major+50minor)pagefaults 0swaps
+
+              0.64 msec task-clock                       #    0.613 CPUs utilized            ( +-  1.20% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                31      page-faults                      #   48.872 K/sec                  
+           1206338      cycles                           #    1.902 GHz                      ( +-  1.21% )
+            693171      instructions                     #    0.58  insn per cycle           ( +-  0.15% )
+            159506      branches                         #  251.464 M/sec                    ( +-  0.13% )
+              3408      branch-misses                    #    2.13% of all branches          ( +-  2.49% )
+            159879      L1-dcache-loads                  #  252.052 M/sec                    ( +-  0.19% )
+             75039      L1-dcache-load-misses            #   46.59% of all L1-dcache accesses  ( +-  0.05% )
+              2037      LLC-loads                        #    3.211 M/sec                    ( +-  1.06% )
+               173      LLC-load-misses                  #    7.97% of all LL-cache accesses  ( +- 10.81% )
+
+        0.00104642 +- 0.00000937 seconds time elapsed  ( +-  0.90% )
+</code></pre>
+<p>=== nq_01_01 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 88%CPU (0avgtext+0avgdata 2960maxresident)k
+0inputs+0outputs (0major+50minor)pagefaults 0swaps
+
+              0.67 msec task-clock                       #    0.650 CPUs utilized            ( +-  1.32% )
+                 1      context-switches                 #    1.593 K/sec                    ( +-  6.88% )
+                 0      cpu-migrations                   #    0.000 /sec                   
+                31      page-faults                      #   49.398 K/sec                  
+           1260500      cycles                           #    2.009 GHz                      ( +-  1.31% )
+            706692      instructions                     #    0.60  insn per cycle           ( +-  0.15% )
+            162258      branches                         #  258.557 M/sec                    ( +-  0.13% )
+              3788      branch-misses                    #    2.36% of all branches          ( +-  1.58% )
+            163714      L1-dcache-loads                  #  260.877 M/sec                    ( +-  0.18% )
+             75570      L1-dcache-load-misses            #   46.96% of all L1-dcache accesses  ( +-  0.05% )
+              2383      LLC-loads                        #    3.797 M/sec                    ( +-  0.94% )
+               202      LLC-load-misses                  #    9.35% of all LL-cache accesses  ( +-  9.68% )
+
+         0.0010383 +- 0.0000115 seconds time elapsed  ( +-  1.11% )
+</code></pre>
+<p>=== nq_01_02 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 4188maxresident)k
+0inputs+0outputs (0major+159minor)pagefaults 0swaps
+
+              4.62 msec task-clock                       #    0.907 CPUs utilized            ( +-  0.14% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               140      page-faults                      #   30.039 K/sec                  
+           8751059      cycles                           #    1.878 GHz                      ( +-  0.14% )
+          18350249      instructions                     #    2.08  insn per cycle           ( +-  0.01% )
+           3404714      branches                         #  730.540 M/sec                    ( +-  0.01% )
+             81422      branch-misses                    #    2.39% of all branches          ( +-  0.06% )
+           3909260      L1-dcache-loads                  #  838.799 M/sec                    ( +-  0.01% )
+            102108      L1-dcache-load-misses            #    2.61% of all L1-dcache accesses  ( +-  0.08% )
+              3325      LLC-loads                        #  713.436 K/sec                    ( +-  0.99% )
+               345      LLC-load-misses                  #    9.77% of all LL-cache accesses  ( +- 10.23% )
+
+         0.0050949 +- 0.0000184 seconds time elapsed  ( +-  0.36% )
+</code></pre>
+<p>=== nq_01_03 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 92%CPU (0avgtext+0avgdata 2960maxresident)k
+0inputs+0outputs (0major+50minor)pagefaults 0swaps
+
+              0.66 msec task-clock                       #    0.625 CPUs utilized            ( +-  0.87% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                31      page-faults                      #   48.504 K/sec                  
+           1235064      cycles                           #    1.932 GHz                      ( +-  0.87% )
+            695556      instructions                     #    0.58  insn per cycle           ( +-  0.16% )
+            159965      branches                         #  250.287 M/sec                    ( +-  0.14% )
+              3469      branch-misses                    #    2.16% of all branches          ( +-  0.76% )
+            160616      L1-dcache-loads                  #  251.306 M/sec                    ( +-  0.21% )
+             75175      L1-dcache-load-misses            #   46.66% of all L1-dcache accesses  ( +-  0.08% )
+              2151      LLC-loads                        #    3.366 M/sec                    ( +-  1.24% )
+               132      LLC-load-misses                  #    6.04% of all LL-cache accesses  ( +- 12.98% )
+
+        0.00105040 +- 0.00000621 seconds time elapsed  ( +-  0.59% )
+</code></pre>
+<p>=== nq_01_04 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 86%CPU (0avgtext+0avgdata 2992maxresident)k
+0inputs+0outputs (0major+51minor)pagefaults 0swaps
+
+              0.63 msec task-clock                       #    0.595 CPUs utilized            ( +-  1.16% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                32      page-faults                      #   50.434 K/sec                  
+           1176407      cycles                           #    1.854 GHz                      ( +-  1.14% )
+            704584      instructions                     #    0.59  insn per cycle           ( +-  0.17% )
+            161994      branches                         #  255.314 M/sec                    ( +-  0.15% )
+              3413      branch-misses                    #    2.10% of all branches          ( +-  0.83% )
+            163024      L1-dcache-loads                  #  256.937 M/sec                    ( +-  0.21% )
+             75048      L1-dcache-load-misses            #   45.84% of all L1-dcache accesses  ( +-  0.06% )
+              2171      LLC-loads                        #    3.422 M/sec                    ( +-  1.23% )
+               165      LLC-load-misses                  #    7.61% of all LL-cache accesses  ( +- 11.71% )
+
+        0.00105252 +- 0.00000890 seconds time elapsed  ( +-  0.85% )
+</code></pre>
+<p>=== nq_01_05 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 3952maxresident)k
+0inputs+0outputs (0major+162minor)pagefaults 0swaps
+
+              5.99 msec task-clock                       #    0.934 CPUs utilized            ( +-  0.14% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+               143      page-faults                      #   23.849 K/sec                  
+          11352389      cycles                           #    1.893 GHz                      ( +-  0.14% )
+          17690248      instructions                     #    1.56  insn per cycle           ( +-  0.01% )
+           2849871      branches                         #  475.292 M/sec                    ( +-  0.02% )
+            139015      branch-misses                    #    4.87% of all branches          ( +-  0.12% )
+           4450469      L1-dcache-loads                  #  742.234 M/sec                    ( +-  0.02% )
+             97038      L1-dcache-load-misses            #    2.18% of all L1-dcache accesses  ( +-  0.13% )
+              3201      LLC-loads                        #  533.852 K/sec                    ( +-  1.57% )
+               306      LLC-load-misses                  #    9.31% of all LL-cache accesses  ( +- 11.72% )
+
+         0.0064211 +- 0.0000189 seconds time elapsed  ( +-  0.29% )
+</code></pre>
+<p>=== nq_01_06 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 7424maxresident)k
+0inputs+0outputs (0major+99minor)pagefaults 0swaps
+
+              3.37 msec task-clock                       #    0.879 CPUs utilized            ( +-  0.28% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                80      page-faults                      #   23.643 K/sec                  
+           6368265      cycles                           #    1.882 GHz                      ( +-  0.26% )
+          11067677      instructions                     #    1.73  insn per cycle           ( +-  0.01% )
+           1216029      branches                         #  359.383 M/sec                    ( +-  0.02% )
+             17916      branch-misses                    #    1.47% of all branches          ( +-  0.19% )
+           1926441      L1-dcache-loads                  #  569.337 M/sec                    ( +-  0.02% )
+            415836      L1-dcache-load-misses            #   21.59% of all L1-dcache accesses  ( +-  0.02% )
+              7783      LLC-loads                        #    2.300 M/sec                    ( +-  0.81% )
+              1296      LLC-load-misses                  #   16.03% of all LL-cache accesses  ( +-  2.20% )
+
+        0.00383204 +- 0.00000979 seconds time elapsed  ( +-  0.26% )
+</code></pre>
+<p>=== nq_01_07 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 7388maxresident)k
+0inputs+0outputs (0major+104minor)pagefaults 0swaps
+
+              3.88 msec task-clock                       #    0.890 CPUs utilized            ( +-  0.20% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                85      page-faults                      #   21.710 K/sec                  
+           7349541      cycles                           #    1.877 GHz                      ( +-  0.18% )
+          13659649      instructions                     #    1.85  insn per cycle           ( +-  0.01% )
+           1478027      branches                         #  377.507 M/sec                    ( +-  0.02% )
+             20897      branch-misses                    #    1.41% of all branches          ( +-  0.31% )
+           2418241      L1-dcache-loads                  #  617.650 M/sec                    ( +-  0.01% )
+            465604      L1-dcache-load-misses            #   19.25% of all L1-dcache accesses  ( +-  0.01% )
+              9805      LLC-loads                        #    2.504 M/sec                    ( +-  0.70% )
+              1409      LLC-load-misses                  #   14.24% of all LL-cache accesses  ( +-  1.27% )
+
+        0.00436454 +- 0.00000978 seconds time elapsed  ( +-  0.22% )
+</code></pre>
+<p>=== example_00 ===</p>
+<pre><code>0.00user 0.00system 0:00.00elapsed 100%CPU (0avgtext+0avgdata 2960maxresident)k
+0inputs+0outputs (0major+50minor)pagefaults 0swaps
+
+              0.58 msec task-clock                       #    0.560 CPUs utilized            ( +-  1.28% )
+                 0      context-switches                 #    0.000 /sec                   
+                 0      cpu-migrations                   #    0.000 /sec                   
+                31      page-faults                      #   49.305 K/sec                  
+           1098989      cycles                           #    1.748 GHz                      ( +-  1.27% )
+            695221      instructions                     #    0.59  insn per cycle           ( +-  0.15% )
+            159801      branches                         #  254.161 M/sec                    ( +-  0.13% )
+              3464      branch-misses                    #    2.16% of all branches          ( +-  1.62% )
+            160448      L1-dcache-loads                  #  255.190 M/sec                    ( +-  0.18% )
+             75005      L1-dcache-load-misses            #   46.47% of all L1-dcache accesses  ( +-  0.06% )
+              2108      LLC-loads                        #    3.353 M/sec                    ( +-  1.26% )
+               133      LLC-load-misses                  #    6.12% of all LL-cache accesses  ( +- 15.88% )
+
+        0.00104346 +- 0.00000918 seconds time elapsed  ( +-  0.88% )
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../benchmark/range_reverse_range_sum-main.Clang.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../benchmark/range_reverse_range_sum-slow.Clang.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../benchmark/range_reverse_range_sum-main.Clang.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../benchmark/range_reverse_range_sum-slow.Clang.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
