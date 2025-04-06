@@ -50,15 +50,10 @@ def build_step_1(int u, int p) -> void {
 def build_step_2(int u, int w, int p, int d) -> void {
   int i = id++;
   node2id[u] = i;
+  node[i] = {a[u], b[u], b[u]};
   depth[i] = d;
-  int anc = ances[i] = node2id[w];
+  ances[i] = node2id[w];
   parent[i] = node2id[p];
-  node[i * 2 + 1] = {a[u], b[u], b[u]};
-  let a = node + anc * 2;
-  int k = (i - anc) * 2 + 1;
-  for (int j = 1; k & (j * 2); k -= j, j *= 2) {
-    a[k - j] = a[k - j * 2] + a[k];
-  }
   if (int v = heavy[u]; v) {
     build_step_2(v, w, u, d + 1);
   }
@@ -68,64 +63,6 @@ def build_step_2(int u, int w, int p, int d) -> void {
       build_step_2(v, v, u, d + 1);
     }
   }
-}
-
-def apply_1(int i, u32 x) -> u32 {
-  int anc = ances[i];
-  let a = node + anc * 2;
-  int r = (i - anc) * 2 + 2;
-  for (; r; r -= r & -r) {
-    x = a[r - (r & -r) / 2] + x;
-  }
-  return x;
-}
-
-def apply_2(int i, u32 x) -> u32 {
-  int anc = ances[i];
-  let a = node + anc * 2;
-  int r = (i - anc) * 2 + 2;
-  for (int k = 0; k < r;) {
-    int t = 1 << log(r - k);
-    x = x + a[k + t / 2];
-    k += t;
-  }
-  return x;
-}
-
-def apply_1(int i, int j, u32 x) -> u32 {
-  int anc = ances[i];
-  if (i == anc) return apply_1(j, x);
-  let a = node + anc * 2;
-  int l = (i - anc) * 2 - 1;
-  int r = (j - anc) * 2 + 3;
-  int k = (-1 << log(l ^ r)) & r;
-  for (--r; r > k; r -= r & -r) {
-    x = a[r - (r & -r) / 2] + x;
-  }
-  for (++l; k > l;) {
-    int t = 1 << log(k - l);
-    x = a[k - t / 2] + x;
-    k -= t;
-  }
-  return x;
-}
-
-def apply_2(int i, int j, u32 x) -> u32 {
-  int anc = ances[i];
-  if (i == anc) return apply_2(j, x);
-  let a = node + anc * 2;
-  int l = (i - anc) * 2 - 1;
-  int r = (j - anc) * 2 + 3;
-  int k = (-1 << log(l ^ r)) & r;
-  for (++l; l < k; l += l & -l) {
-    x = x + a[l + (l & -l) / 2];
-  }
-  for (--r; k < r;) {
-    int t = 1 << log(r - k);
-    x = x + a[k + t / 2];
-    k += t;
-  }
-  return x;
 }
 
 } // namespace
@@ -149,41 +86,57 @@ int main() {
   }
   build_step_1(0, 0);
   build_step_2(0, 0, 0, 0);
-  std::memset(size, 0, sizeof(int) * n);
-  for (int i = 0; i < n; ++i) size[ances[i]]++;
+  std::memcpy(node + n, node, sizeof(Node) * n);
+  for (int i = n - 1; i > 0; --i) node[i] = node[i * 2] + node[i * 2 + 1];
+  let apply_1 = [&](int l, int r, u32 x) -> u32 {
+    l += n - 1;
+    r += n + 1;
+    int k = log(l ^ r);
+    int R = r >> k;
+    for (r = r >> __builtin_ctz(r) ^ 1; r > R; r = r >> __builtin_ctz(r) ^ 1)
+      x = node[r] + x;
+    for (int t = ~l & ~(-1 << k), i; t > 0; t -= 1 << i) {
+      i = log(t);
+      x = node[l >> i ^ 1] + x;
+    }
+    return x;
+  };
+  let apply_2 = [&](int l, int r, u32 x) -> u32 {
+    l += n - 1;
+    r += n + 1;
+    int k = log(l ^ r);
+    int R = r >> k;
+    for (l = l >> __builtin_ctz(~l) ^ 1; l > R; l = l >> __builtin_ctz(~l) ^ 1)
+      x = x + node[l];
+    for (int t = r & ~(-1 << k), i; t > 0; t -= 1 << i) {
+      i = log(t);
+      x = x + node[r >> i ^ 1];
+    }
+    return x;
+  };
   while (q--) {
     let t = rd.u1();
     if (t == 0) {
-      int i = node2id[rd.uh()];
+      int k = n + node2id[rd.uh()];
       u32 c = rd.uw();
       u32 d = rd.uw();
-      int anc = ances[i];
-      let a = node + anc * 2;
-      int n = size[anc];
-      int k = (i - anc) * 2 + 1;
-      a[k] = {c, d, d};
-      for (int j = 1;; j *= 2) {
-        if (k & (j * 2)) {
-          a[k - j] = a[k - j * 2] + a[k];
-          k -= j;
-        } else {
-          if (k + j * 3 > n * 2) break;
-          a[k + j] = a[k] + a[k + j * 2];
-          k += j;
-        }
+      node[k] = {c, d, d};
+      for (k /= 2; k > 0; k /= 2) {
+        node[k] = node[k * 2] + node[k * 2 + 1];
       }
     }
     if (t == 1) {
       int u = node2id[rd.uh()];
       int v = node2id[rd.uh()];
       u32 x = rd.uw();
-      int vec[20], top{};
+      std::pair<int, int> vec[20];
+      int c = 0;
       while (ances[u] != ances[v]) {
         if (depth[ances[u]] > depth[ances[v]]) {
-          x = apply_1(u, x);
+          x = apply_1(ances[u], u, x);
           u = parent[ances[u]];
         } else {
-          vec[top++] = v;
+          vec[++c] = {ances[v], v};
           v = parent[ances[v]];
         }
       }
@@ -192,8 +145,9 @@ int main() {
       } else {
         x = apply_2(u, v, x);
       }
-      while (top--) {
-        x = apply_2(vec[top], x);
+      for (; c > 0; --c) {
+        def[l, r] = vec[c];
+        x = apply_2(l, r, x);
       }
       wt.uw(x);
     }
