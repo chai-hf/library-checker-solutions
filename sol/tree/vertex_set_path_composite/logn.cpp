@@ -21,14 +21,18 @@ struct Node {
   Segment s, t;
   int l, r, p;
 } node[N];
-Segment operator+(const Segment &l, const Segment &r) {
+auto operator+(const Segment &l, const Segment &r) -> Segment {
   u32 x = u64(l.a) * r.a % P;
   u32 y = (u64(l.a) * r.b + l.b) % P;
   u32 z = (u64(r.a) * l.c + r.c) % P;
   return {x, y, z};
 }
-u32 operator+(const Segment &l, u32 r) { return (u64(l.a) * r + l.b) % P; }
-u32 operator+(u32 l, const Segment &r) { return (u64(r.a) * l + r.c) % P; }
+auto operator+(const Segment &l, u32 r) -> u32 {
+  return (u64(l.a) * r + l.b) % P;
+}
+auto operator+(u32 l, const Segment &r) -> u32 {
+  return (u64(r.a) * l + r.c) % P;
+}
 u32 a[N];
 u32 b[N];
 int head[N];

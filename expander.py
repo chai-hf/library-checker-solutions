@@ -23,12 +23,18 @@ class Expander:
             return True
         return False
 
-    def __init__(self, lib_paths: List[Path], full):
+    def __init__(self, lib_paths: List[Path], full: bool):
         self.lib_paths = lib_paths
+        self.full = full
         self.include_pattern = re.compile(
             r'#include [<"](.*)[">]' if full else r'#include "(.*)"')
 
     included = set()  # type: Set[Path]
+
+    def expand_line(self, line: str) -> str:
+        if not self.full or "noexcept" in line:
+            return line
+        return line.replace("->", "noexcept ->")
 
     def find_acl(self, acl_name: str) -> Path:
         for lib_path in self.lib_paths:
@@ -54,13 +60,13 @@ class Expander:
 
             m = self.include_pattern.match(line)
             if m:
-                name = m.group(1)
                 try:
-                    result.extend(self.expand_acl(self.find_acl(name)))
+                    acl_path = self.find_acl(m.group(1))
+                    result.extend(self.expand_acl(acl_path))
                 except FileNotFoundError:
-                    result.append(line)
+                    result.append(self.expand_line(line))
             else:
-                result.append(line)
+                result.append(self.expand_line(line))
         return result
 
     def expand(self, source: str) -> str:
@@ -69,10 +75,13 @@ class Expander:
         for line in source.splitlines():
             m = self.include_pattern.match(line)
             if m:
-                acl_path = self.find_acl(m.group(1))
-                result.extend(self.expand_acl(acl_path))
+                try:
+                    acl_path = self.find_acl(m.group(1))
+                    result.extend(self.expand_acl(acl_path))
+                except FileNotFoundError:
+                    result.append(self.expand_line(line))
             else:
-                result.append(line)
+                result.append(self.expand_line(line))
         return '\n'.join(result)
 
 

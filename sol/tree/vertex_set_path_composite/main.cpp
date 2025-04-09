@@ -9,15 +9,15 @@ constexpr int P = 998244353;
 
 struct Node {
   u32 a, b, c;
-  Node operator+(const Node &t) const {
+  auto operator+(const Node &t) const -> Node {
     u32 x = u64(a) * t.a % P;
     u32 y = (u64(a) * t.b + b) % P;
     u32 z = (u64(t.a) * c + t.c) % P;
     return {x, y, z};
   }
 } node[N * 2];
-u32 operator+(const Node &l, u32 r) { return (u64(l.a) * r + l.b) % P; }
-u32 operator+(u32 l, const Node &r) { return (u64(r.a) * l + r.c) % P; }
+auto operator+(const Node &l, u32 r) -> u32 { return (u64(l.a) * r + l.b) % P; }
+auto operator+(u32 l, const Node &r) -> u32 { return (u64(r.a) * l + r.c) % P; }
 u32 a[N];
 u32 b[N];
 int head[N];

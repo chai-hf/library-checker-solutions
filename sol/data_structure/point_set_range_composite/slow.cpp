@@ -9,10 +9,10 @@ constexpr int P = 998244353;
 
 struct node {
   u32 a, b;
-  node operator+(node t) {
+  auto operator+(node t) -> node {
     return {u32(u64(t.a) * a % P), u32((u64(t.a) * b + t.b) % P)};
   }
-  u32 operator+(u32 x) { return (u64(a) * x + b) % P; }
+  auto operator+(u32 x) -> u32 { return (u64(a) * x + b) % P; }
 } a[N];
 
 } // namespace

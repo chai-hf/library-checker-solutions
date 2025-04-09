@@ -8,13 +8,13 @@ constexpr u32 P = 998244353;
 
 struct Affine {
   u32 a, b, c;
-  def operator+(const Affine &t) const->Affine {
+  auto operator+(const Affine &t) const -> Affine {
     u32 x = (u64(a) * t.a) % P;
     u32 y = (u64(a) * t.b + b) % P;
     u32 z = (u64(t.a) * c + t.c) % P;
     return {x, y, z};
   }
-  def operator+(const u32 &t) const->u32 { return (u64(a) * t + b) % P; }
+  auto operator+(const u32 &t) const -> u32 { return (u64(a) * t + b) % P; }
 };
 struct Node {
   u32 a;

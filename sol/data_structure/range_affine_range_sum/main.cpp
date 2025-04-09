@@ -9,17 +9,17 @@ constexpr int P = 998244353;
 
 struct affine {
   u32 a, b;
-  affine operator+(affine t) {
+  auto operator+(affine t) -> affine {
     return {u32(u64(t.a) * a % P), u32((u64(t.a) * b + t.b) % P)};
   }
-  void operator+=(affine t) { *this = *this + t; }
+  auto operator+=(affine t) -> void { *this = *this + t; }
 };
 
 struct node {
   u32 siz;
   u32 sum;
   affine aff;
-  void operator+=(affine t) {
+  auto operator+=(affine t) -> void {
     aff += t;
     sum = (u64(t.a) * sum + u64(t.b) * siz) % P;
   }

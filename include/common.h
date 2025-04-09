@@ -20,15 +20,23 @@ struct rd {
     return !x;
   }
 
-  char *p, *l, *r;
+  char *p;
+#ifdef LOCAL
+  inline static char *addr;
+  inline static usize len;
+#endif
 
-  rd() {
+  rd() noexcept {
     struct stat st;
     fstat(0, &st);
-    p = l = r = (char *)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, 0, 0);
-    r += st.st_size;
+    p = (char *)mmap(nullptr, st.st_size, PROT_READ, MAP_PRIVATE, 0, 0);
+#ifdef LOCAL
+    addr = p, len = st.st_size;
+#endif
   }
-  ~rd() { munmap(l, r - l); }
+#ifdef LOCAL
+  ~rd() { munmap(addr, len); }
+#endif
 
   def skip(int n) -> void { p += n; }
 
@@ -135,23 +143,23 @@ struct wt {
   inline static char buf[1 << 20];
   static fun sentinel = buf + sizeof(buf) - 50;
   char *p = buf;
+  def flush() -> void { write(1, buf, p - buf), p = buf; }
+  def print_low(u64 x) -> void { std::memcpy(p, &low[x], 4), p += 4; }
+  def print_pos(u64 x) -> void { std::memcpy(p, &pos[x], 4), p += 4; }
   ~wt() { flush(); }
-  void flush() { write(1, buf, p - buf), p = buf; }
-  void print_low(u64 x) { std::memcpy(p, &low[x], 4), p += 4; }
-  void print_pos(u64 x) { std::memcpy(p, &pos[x], 4), p += 4; }
 
-  void puts(const char *src, int n) {
+  def puts(const char *src, int n) -> void {
     if (sentinel < p + n) flush();
     std::memcpy(p, src, n), p += n;
   }
 
-  void u1(u8 x) {
+  def u1(u8 x) -> void {
     toy_assert(x < 10);
     *p++ = ' ';
     *p++ = '0' + x;
   }
 
-  void uw(u32 x) {
+  def uw(u32 x) -> void {
     if (sentinel < p) flush();
     *p++ = ' ';
     if (x > 9999'9999) {
@@ -166,7 +174,7 @@ struct wt {
     }
   }
 
-  void ud(u64 x) {
+  def ud(u64 x) -> void {
     if (sentinel < p) flush();
     *p++ = ' ';
     if (x > 9999'9999'9999'9999) {
