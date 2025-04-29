@@ -17,6 +17,20 @@ int r[N];
 int a[N];
 u64 b[N + 1];
 u64 c[N + 2];
+int id;
+
+void dfs(int u, int w) {
+  p[u] = w;
+  l[u] = ++id;
+  c[id] += b[id] = a[u];
+  for (int e = head[u]; e; e = edge[e].next) {
+    int v = edge[e].to;
+    if (v != w) {
+      dfs(v, u);
+    }
+  }
+  c[r[u] = id + 1] -= a[u];
+}
 
 } // namespace
 
@@ -26,6 +40,7 @@ int main() {
   int n = rd.uh();
   int q = rd.uh();
 #ifdef LOCAL
+  id = 0;
   std::memset(head, 0, 4 * n);
   std::memset(c, 0, 8 * n + 16);
 #endif
@@ -36,21 +51,7 @@ int main() {
     edge[i * 2 | 0] = {v, head[u]}, head[u] = i * 2 | 0;
     edge[i * 2 | 1] = {u, head[v]}, head[v] = i * 2 | 1;
   }
-  p[0] = -1, l[0] = 1, b[1] = c[1] = a[0];
-  for (int u = 0, i = 1; u >= 0;) {
-    if (int e = head[u]; e) {
-      def[v, x] = edge[e];
-      head[u] = x;
-      if (v == p[u]) continue;
-      p[v] = u;
-      l[v] = ++i;
-      c[i] += b[i] = a[v];
-      u = v;
-    } else {
-      c[r[u] = i + 1] -= a[u];
-      u = p[u];
-    }
-  }
+  dfs(0, -1);
   u64 sum = 0;
   for (int i = 1; i <= n; ++i) c[i] = sum += c[i];
   for (int i = n; i >= 1; --i) c[i] -= c[i - (i & -i)];
