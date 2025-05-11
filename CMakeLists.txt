@@ -173,7 +173,7 @@ foreach(SOURCE ${SOURCES})
 
     # ----- bench -----
     add_custom_target(${TARGET}-bench
-        COMMAND ${CMAKE_SOURCE_DIR}/benchmark.py ${TARGET_BENCH} ${INPUTS} ${CMAKE_SOURCE_DIR}/analysis/benchmark/${TARGET}.${CMAKE_CXX_COMPILER_ID}.md
+        COMMAND ${CMAKE_SOURCE_DIR}/benchmark.py ${TARGET_BENCH} ${INPUTS} ${CMAKE_SOURCE_DIR}/analysis/benchmark/${TARGET}.md
         DEPENDS ${TARGET_BENCH}
     )
 

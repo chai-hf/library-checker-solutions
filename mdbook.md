@@ -6,7 +6,7 @@ For benchmarking best practices, refer to [Benchmarking tips](https://llvm.org/d
 
 This repository contains my solutions to the problems, along with benchmark and coverage reports.
 
-Benchmarking is done using `time` and `perf` to measure performance. See [unionfind](benchmark/unionfind-main.Clang.md) for an example. Since my solutions support multiple input files, I provide a special test case `All` that processes all queries in a batch. Ideally, its runtime is slightly less than the sum of individual test cases (`Sum`), and its memory usage slightly higher than the maximum (`Max`). This helps evaluate the efficiency of low-level optimizations.
+Benchmarking is done using `time` and `perf` to measure performance. See [unionfind](benchmark/unionfind-main.md) for an example. Since my solutions support multiple input files, I provide a special test case `All` that processes all queries in a batch. Ideally, its runtime is slightly less than the sum of individual test cases (`Sum`), and its memory usage slightly higher than the maximum (`Max`). This helps evaluate the efficiency of low-level optimizations.
 
 Coverage testing is provided in two forms. The first is a global LCOV report ([link](lcov/root/index.html)) that shows near-100% line coverage across all solutions. The second is per-testcase coverage reports.
 

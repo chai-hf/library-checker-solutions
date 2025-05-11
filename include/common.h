@@ -9,16 +9,47 @@ using namespace toy;
 prelude;
 
 struct rd {
-  static fun all_digit(u32 x) -> bool {
-    x ^= 0x30303030;
+  static def all_digit(u32 x) -> bool {
     x &= 0xf0f0f0f0;
     return !x;
   }
 
-  static fun all_digit(u64 x) -> bool {
-    x ^= 0x3030303030303030;
+  static def all_digit(u64 x) -> bool {
     x &= 0xf0f0f0f0f0f0f0f0;
     return !x;
+  }
+
+  static def all_digit(u128 x) -> bool {
+    x &= u128(0xf0f0f0f0f0f0f0f0) << 64 | 0xf0f0f0f0f0f0f0f0;
+    return !x;
+  }
+
+  static def parse_from(u32 x) -> u32 {
+    x = (x * 10 + (x >> 8)) & 0x00ff00ff;
+    return (x * 100 + (x >> 16)) & 0x0000ffff;
+  }
+
+  static def parse_from(u64 x) -> u32 {
+    x = (x * 10 + (x >> 8)) & 0x00ff00ff00ff00ff;
+    x = (x * 100 + (x >> 16)) & 0x0000ffff0000ffff;
+    return u32(x * 10000 + (x >> 32));
+  }
+
+  static def parse_from(u128 x) -> u64 {
+    u64 l = u64(x);
+    u64 h = x >> 64;
+    l = (l * 10 + (l >> 8)) & 0x00ff00ff00ff00ff;
+    h = (h * 10 + (h >> 8)) & 0x00ff00ff00ff00ff;
+    l = (l * 100 + (l >> 16)) & 0x0000ffff0000ffff;
+    h = (h * 100 + (h >> 16)) & 0x0000ffff0000ffff;
+    l = (l * 10000 + (l >> 32)) & 0x00000000ffffffff;
+    h = (h * 10000 + (h >> 32)) & 0x00000000ffffffff;
+    return l * 100000000 + h;
+  }
+
+  template <typename T> def parse_remaining(T x) -> T {
+    for (; *p >= '0'; ++p) x = x * 10 + *p - '0';
+    return ++p, x;
   }
 
   char *p;
@@ -51,62 +82,60 @@ struct rd {
     return ++p, x;
   }
 
-  def ub() -> u32 {
-    u32 x = *p++ - '0';
-    for (; *p >= '0'; ++p) x = x * 10 + *p - '0';
-    return ++p, x;
-  }
+  def ub() -> u32 { return parse_remaining(*p++ - '0'); }
 
   def uh() -> u32 {
-    u32 x{};
-    u32 a;
-    std::memcpy(&a, p, sizeof(a));
-    if (all_digit(a)) {
-      a ^= 0x30303030;
-      a = (a * 10 + (a >> 8)) & 0x00ff00ff;
-      a = (a * 100 + (a >> 16)) & 0x0000ffff;
-      x = a, p += sizeof(a);
+    u32 x;
+    std::memcpy(&x, p, sizeof(x));
+    x ^= 0x30303030;
+    if (all_digit(x)) {
+      p += sizeof(x);
+      return parse_remaining(parse_from(x));
     }
-    for (; *p >= '0'; ++p) x = x * 10 + *p - '0';
-    return ++p, x;
+    return ub();
+  }
+
+  def u26() -> u32 {
+    u64 x;
+    std::memcpy(&x, p, sizeof(x));
+    x ^= 0x3030303030303030;
+    let d = std::countr_zero(x & 0xf0f0f0f0f0f0f0f0) >> 3;
+    p += d + 1;
+    return parse_from(x << ((sizeof(x) - d) << 3));
   }
 
   def uw() -> u32 {
-    u32 x{};
-    u64 a;
-    std::memcpy(&a, p, sizeof(a));
-    if (all_digit(a)) {
-      a ^= 0x3030303030303030;
-      a = (a * 10 + (a >> 8)) & 0x00ff00ff00ff00ff;
-      a = (a * 100 + (a >> 16)) & 0x0000ffff0000ffff;
-      a = (a * 10000 + (a >> 32)) & 0x00000000ffffffff;
-      x = u32(a), p += sizeof(a);
+    u64 x;
+    std::memcpy(&x, p, sizeof(x));
+    x ^= 0x3030303030303030;
+    if (all_digit(x)) {
+      p += sizeof(x);
+      return parse_remaining(parse_from(x));
     }
-    for (; *p >= '0'; ++p) x = x * 10 + *p - '0';
-    return ++p, x;
+    return u26();
+  }
+
+  def u53() -> u64 {
+    u128 x;
+    std::memcpy(&x, p, sizeof(x));
+    x ^= u128(0x3030303030303030) << 64 | 0x3030303030303030;
+    let d = (all_digit(u64(x))
+                 ? std::countr_zero(0xf0f0f0f0f0f0f0f0 & u64(x >> 64)) + 64
+                 : std::countr_zero(0xf0f0f0f0f0f0f0f0 & u64(x))) >>
+            3;
+    p += d + 1;
+    return parse_from(x << ((sizeof(x) - d) << 3));
   }
 
   def ud() -> u64 {
-    u64 x{};
-    union {
-      u128 ch;
-      u64 d[2];
-    };
-    std::memcpy(&ch, p, sizeof(ch));
-    u64 a = d[0], b = d[1];
-    if (all_digit(a) && all_digit(b)) {
-      a ^= 0x3030303030303030;
-      b ^= 0x3030303030303030;
-      a = (a * 10 + (a >> 8)) & 0x00ff00ff00ff00ff;
-      b = (b * 10 + (b >> 8)) & 0x00ff00ff00ff00ff;
-      a = (a * 100 + (a >> 16)) & 0x0000ffff0000ffff;
-      b = (b * 100 + (b >> 16)) & 0x0000ffff0000ffff;
-      a = (a * 10000 + (a >> 32)) & 0x00000000ffffffff;
-      b = (b * 10000 + (b >> 32)) & 0x00000000ffffffff;
-      x = a * 100000000 + b, p += sizeof(ch);
+    u128 x;
+    std::memcpy(&x, p, sizeof(x));
+    x ^= u128(0x3030303030303030) << 64 | 0x3030303030303030;
+    if (all_digit(x)) {
+      p += sizeof(x);
+      return parse_remaining(parse_from(x));
     }
-    for (; *p >= '0'; ++p) x = x * 10 + *p - '0';
-    return ++p, x;
+    return u53();
   }
 
   def i1() -> i32 { return *p == '-' ? ++p, -u1() : u1(); }
