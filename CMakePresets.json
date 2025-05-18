@@ -1,0 +1,29 @@
+{
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 4,
+        "minor": 0,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "gnu",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_CXX_FLAGS": "-DLOCAL -march=native -fno-exceptions -fno-rtti"
+            }
+        },
+        {
+            "name": "llvm",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_CXX_FLAGS": "-DLOCAL -march=native -fno-exceptions -fno-rtti -stdlib=libc++",
+                "CMAKE_CXX_LINK_FLAGS": "-fuse-ld=lld"
+            }
+        }
+    ]
+}
