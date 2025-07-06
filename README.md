@@ -50,7 +50,7 @@ This allows clangd to analyze both solution and generator source files correctly
 Generate necessary support files:
 
 ```bash
-ninja -C prelude
+ninja -C build prelude
 ```
 
 This enables `import std;` used in all source files.
@@ -58,7 +58,7 @@ This enables `import std;` used in all source files.
 ## Generate `params.h`
 
 ```bash
-ninja -C genparam
+ninja -C build genparam
 ```
 
 This generates `params.h` for all problems, improving language server support when browsing test generators.
@@ -74,7 +74,7 @@ cd problems && ./generate.py -p sample/aplusb
 Generate for all problems with non-empty solutions:
 
 ```bash
-ninja -C gentests    # for all
+ninja -C build gentests    # for all
 ```
 
 Note: Only problems with non-empty solutions are processed to save time.
