@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 u64 a[500001];
 

@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 int main() {
   std::vector<int> vec(2);

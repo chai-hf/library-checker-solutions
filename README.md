@@ -50,15 +50,7 @@ This allows clangd to analyze both solution and generator source files correctly
 Generate necessary support files:
 
 ```bash
-ninja -C prelude
-```
-
-This enables `import std;` used in all source files.
-
-## Generate `params.h`
-
-```bash
-ninja -C genparam
+ninja -C build genparam
 ```
 
 This generates `params.h` for all problems, improving language server support when browsing test generators.
@@ -74,7 +66,7 @@ cd problems && ./generate.py -p sample/aplusb
 Generate for all problems with non-empty solutions:
 
 ```bash
-ninja -C gentests    # for all
+ninja -C build gentests    # for all
 ```
 
 Note: Only problems with non-empty solutions are processed to save time.
@@ -181,9 +173,4 @@ ninja -C build pack
 
 ## Miscellaneous
 
-- The line `#define prelude import std;` in `toy/common.h`, along with `prelude;` included in all source files, is a workaround for a clangd issue. It is not required for compilation.
-- For reliable benchmark results, I sometimes run benchmarks immediately after boot, replacing `init` with `bash` to minimize background noise. This is optional but useful for strict performance testing.
-
----
-
-Feel free to customize the setup or structure to better fit your workflow.
+For reliable benchmark results, I sometimes run benchmarks immediately after boot, replacing `init` with `bash` to minimize background noise. This is optional but useful for strict performance testing.

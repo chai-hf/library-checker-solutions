@@ -1,11 +1,11 @@
 #pragma once
 #include "toy/common.h"
-prelude;
 
 namespace toy {
 
 using std::bit_cast;
-template <std::integral T> fun bit_ceil(T t) noexcept {
+using std::byteswap;
+template <std::integral T> [[nodiscard]] fun bit_ceil(T t) noexcept {
   return std::bit_ceil(std::make_unsigned_t<T>(t));
 }
 template <std::integral T> [[nodiscard]] fun bit_floor(T t) noexcept {

@@ -1,21 +1,19 @@
 #pragma once
-#include <cstdio>
+#include "toy/common.h"
 #include <immintrin.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <toy/common.h>
 #include <unistd.h>
 using namespace toy;
-prelude;
 
 struct rd {
-  static fun all_digit(u32 x) -> bool {
+  fun all_digit(u32 x) -> bool {
     x ^= 0x30303030;
     x &= 0xf0f0f0f0;
     return !x;
   }
 
-  static fun all_digit(u64 x) -> bool {
+  fun all_digit(u64 x) -> bool {
     x ^= 0x3030303030303030;
     x &= 0xf0f0f0f0f0f0f0f0;
     return !x;

@@ -38,14 +38,14 @@ def check_system_settings():
             sys.exit(1)
 
     # Check Hyperthreading
-    # for cpu in os.listdir("/sys/devices/system/cpu/"):
-    #     if cpu.startswith("cpu") and cpu[3:].isdigit():
-    #         topo_path = f"/sys/devices/system/cpu/{cpu}/topology/thread_siblings_list"
-    #         if os.path.exists(topo_path):
-    #             with open(topo_path, "r") as f:
-    #                 if len(f.read().strip().split(',')) != 1:
-    #                     print(f"Error: Hyperthreading is enabled for {cpu}. Please disable it.")
-    #                     sys.exit(1)
+    for cpu in os.listdir("/sys/devices/system/cpu/"):
+        if cpu.startswith("cpu") and cpu[3:].isdigit():
+            topo_path = f"/sys/devices/system/cpu/{cpu}/topology/thread_siblings_list"
+            if os.path.exists(topo_path):
+                with open(topo_path, "r") as f:
+                    if len(f.read().strip().split(',')) != 1:
+                        print(f"Error: Hyperthreading is enabled for {cpu}. Please disable it.")
+                        sys.exit(1)
 
 def extract_task_clock(perf_output):
     for line in perf_output.splitlines():

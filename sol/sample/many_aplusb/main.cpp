@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 int main() {
   rd rd;

@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 

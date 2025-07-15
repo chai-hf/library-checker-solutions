@@ -1,18 +1,6 @@
 #pragma once
-
-#ifdef LOCAL
-import std;
-#else
 #include <bits/stdc++.h>
-#endif
 
-#ifdef CLANGD
-#define prelude import std
-#else
-#define prelude
-#endif
-
-#include <cassert>
 #ifdef NDEBUG
 #define toy_assert(cond) [[assume(cond)]]
 #else

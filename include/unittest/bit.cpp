@@ -1,5 +1,4 @@
 #include <toy/bit.h>
-prelude;
 
 namespace toy {
 

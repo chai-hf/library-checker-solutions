@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 4.0.0)
-
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD a9e1cf81-9932-4810-974b-6eccaf14e457)
-
-set(CMAKE_CXX_MODULE_STD ON)
+cmake_minimum_required(VERSION 3.31)
 
 project(toy LANGUAGES CXX)
 
