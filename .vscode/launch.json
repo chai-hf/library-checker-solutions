@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "LLDB Debug",
+      "type": "lldb-dap",
+      "request": "launch",
+      "cwd": "${cmake.testWorkingDirectory}",
+      "program": "${cmake.testProgram}",
+      "args": [
+        "${cmake.testArgs}"
+      ]
+    }
+  ]
+}

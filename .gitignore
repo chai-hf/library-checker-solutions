@@ -1,0 +1,6 @@
+.cache
+build
+analysis
+gh-pages
+compile_commands.json
+*.cpp.cxx
