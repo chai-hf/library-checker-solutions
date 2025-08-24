@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -20,9 +19,6 @@ int main() {
   rd rd;
   wt wt;
   int n = rd.uh();
-#ifdef LOCAL
-  std::memset(head, 0, 4 * n);
-#endif
   for (int i = 1; i < n; ++i) {
     int a = rd.uh();
     int b = rd.uh();
@@ -31,12 +27,12 @@ int main() {
     edge[i * 2 | 1] = {a, c, head[b]}, head[b] = i * 2 | 1;
   }
   std::pair<u64, int> ans;
-  let bfs = [&](int u) {
+  auto bfs = [&](int u) {
     pa[u] = -1;
     queue[0] = {0, u};
     ans = {};
     for (int i = 0, j = 0; i < n; ++i) {
-      let[d, u] = queue[i];
+      auto [d, u] = queue[i];
       for (int e = head[u]; e; e = edge[e].nxt) {
         int v = edge[e].to;
         int len = edge[e].len;

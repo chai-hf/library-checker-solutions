@@ -1,20 +1,17 @@
-cmake_minimum_required(VERSION 4.0.0)
-
-set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD a9e1cf81-9932-4810-974b-6eccaf14e457)
-
-set(CMAKE_CXX_MODULE_STD ON)
+cmake_minimum_required(VERSION 3.31)
 
 project(toy LANGUAGES CXX)
 
 enable_testing()
 
-set(CMAKE_CXX_STANDARD 26)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_compile_options(-std=c++26)
+add_compile_options(-march=native)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/ac-library)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/include)
 add_compile_options(-I${CMAKE_SOURCE_DIR}/problems/common)
+add_compile_options(-Wall -Wextra -Wconversion -Wno-sign-conversion)
 
 set(COMPILE_DEBUG -UNDEBUG -g3 -O0 -fsanitize=undefined,address -fno-sanitize-recover=all)
 set(COMPILE_CHECK -UNDEBUG -g0 -O3 -fsanitize=undefined,address -fno-sanitize-recover=all)
@@ -28,8 +25,7 @@ set(LINK_COVER -fprofile-instr-generate)
 
 set(COVER_OPTIONS -format=text --show-line-counts-or-regions --show-branches=percent)
 
-add_executable(prelude sol/sample/aplusb/main.cpp)
-target_compile_options(prelude PRIVATE -DCLANGD -Wall -Wextra -Wconversion -Wno-sign-conversion)
+add_executable(sample sol/sample/aplusb/main.cpp)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS sol/*.cpp)
 
@@ -77,10 +73,10 @@ foreach(SOURCE ${SOURCES})
 
     set(CHECK_CMDS "")
     set(CHECK_OUTS "")
-    set(CHECK_RESS ${TARGET_CHECK}.res)
+    set(CHECK_RESS "")
     set(BENCH_CMDS "")
     set(BENCH_OUTS "")
-    set(BENCH_RESS ${TARGET_CHECK}.res ${TARGET_BENCH}.res)
+    set(BENCH_RESS "")
     set(COVER_OUTS "")
     set(COVER_RESS ${CMAKE_SOURCE_DIR}/analysis/coverage/${TARGET}.md)
 
@@ -110,13 +106,13 @@ foreach(SOURCE ${SOURCES})
         list(APPEND COVER_RESS ${COVER_RES})
 
         # ----- debug -----
-        add_test(NAME ${TARGET}-${TEST} COMMAND ${TARGET_DEBUG} ${INPUT})
+        add_test(NAME ${TARGET}-${TEST} COMMAND ${TARGET_DEBUG} < ${INPUT})
 
         # ----- check -----
         add_custom_command(
             OUTPUT ${CHECK_RES}
             COMMAND rm -rf ${CHECK_RES}
-            COMMAND ${TARGET_CHECK} ${INPUT} > ${CHECK_TMP}
+            COMMAND ${TARGET_CHECK} < ${INPUT} > ${CHECK_TMP}
             COMMAND ${CHECKER} ${INPUT} ${CHECK_TMP} ${OUTPUT} 2> ${CHECK_RES}
             COMMAND rm -rf ${CHECK_TMP}
             DEPENDS ${CHECKER} ${INPUT} ${TARGET_CHECK} ${OUTPUT}
@@ -126,7 +122,7 @@ foreach(SOURCE ${SOURCES})
         add_custom_command(
             OUTPUT ${BENCH_RES}
             COMMAND rm -rf ${BENCH_RES}
-            COMMAND ${TARGET_BENCH} ${INPUT} > ${BENCH_TMP}
+            COMMAND ${TARGET_BENCH} < ${INPUT} > ${BENCH_TMP}
             COMMAND ${CHECKER} ${INPUT} ${BENCH_TMP} ${OUTPUT} 2> ${BENCH_RES}
             COMMAND rm -rf ${BENCH_TMP}
             DEPENDS ${CHECKER} ${INPUT} ${TARGET_BENCH} ${OUTPUT} ${CHECK_RES}
@@ -135,7 +131,7 @@ foreach(SOURCE ${SOURCES})
         # ----- cover -----
         add_custom_command(
             OUTPUT ${COVER_OUT}
-            COMMAND LLVM_PROFILE_FILE=${COVER_OUT} ./${TARGET_COVER} ${INPUT} > /dev/null
+            COMMAND LLVM_PROFILE_FILE=${COVER_OUT} ./${TARGET_COVER} < ${INPUT} > /dev/null
             DEPENDS ${TARGET_COVER} ${INPUT}
         )
         add_custom_command(
@@ -152,28 +148,14 @@ foreach(SOURCE ${SOURCES})
     endforeach()
 
     # ----- check -----
-    add_custom_command(
-        OUTPUT ${TARGET_CHECK}.res
-        COMMAND rm -rf ${TARGET_CHECK}.res
-        COMMAND ${TARGET_CHECK} ${INPUTS} ${CHECK_OUTS}
-        COMMAND ${CHECK_CMDS} rm -rf ${CHECK_OUTS}
-        DEPENDS ${CHECKER} ${INPUT} ${TARGET_CHECK} ${OUTPUT}
-    )
     add_custom_target(${TARGET}-check DEPENDS ${CHECK_RESS})
 
     # ----- judge -----
-    add_custom_command(
-        OUTPUT ${TARGET_BENCH}.res
-        COMMAND rm -rf ${TARGET_BENCH}.res
-        COMMAND ${TARGET_BENCH} ${INPUTS} ${BENCH_OUTS}
-        COMMAND ${BENCH_CMDS} rm -rf ${BENCH_OUTS}
-        DEPENDS ${CHECKER} ${INPUT} ${TARGET_BENCH} ${OUTPUT}
-    )
     add_custom_target(${TARGET}-judge DEPENDS ${BENCH_RESS})
 
     # ----- bench -----
     add_custom_target(${TARGET}-bench
-        COMMAND ${CMAKE_SOURCE_DIR}/benchmark.py ${TARGET_BENCH} ${INPUTS} ${CMAKE_SOURCE_DIR}/analysis/benchmark/${TARGET}.md
+        COMMAND ${CMAKE_SOURCE_DIR}/benchmark.py ./${TARGET_BENCH} ${INPUTS} ${CMAKE_SOURCE_DIR}/analysis/benchmark/${TARGET}.md
         DEPENDS ${TARGET_BENCH}
     )
 

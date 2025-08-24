@@ -4,11 +4,10 @@ This repository contains my solutions for [Library Checker](https://judge.yosupo
 
 ## Requirements
 
-- CMake (latest version)
+- CMake and Ninja (for builds)
 - LLVM toolchain (Clang, LLD, etc.)
-- Ninja (for builds)
 - Python 3 (for test generation scripts)
-- Optionally: `mdbook` (for GitHub Pages)
+- Optionally: mdbook (for GitHub Pages)
 
 It's recommended to unlimit your stack size before running some algorithms that require deep recursion:
 
@@ -21,7 +20,7 @@ ulimit -s unlimited
 ### 1. Configure with CMake
 
 ```bash
-cmake --preset llvm
+cmake --preset default
 ```
 
 You can customize `CMakeLists.txt` and `CMakePresets.json` as needed.
@@ -29,7 +28,7 @@ You can customize `CMakeLists.txt` and `CMakePresets.json` as needed.
 ### 2. Pull Submodules
 
 ```bash
-git submodule update --init --depth 1
+git submodule update --init --remote --depth 1
 ```
 
 This pulls:
@@ -37,28 +36,10 @@ This pulls:
 - Test case generators
 - `ac-library` (in case you need it)
 
-## Language Server Support
-
-Clangd reads `compile_commands.json` to enable proper code navigation and diagnostics. Since the file in `build` may change, copy it once to keep a stable version:
+### 3. Generate `params.h`
 
 ```bash
-cp build/compile_commands.json .
-```
-
-This allows clangd to analyze both solution and generator source files correctly.
-
-Generate necessary support files:
-
-```bash
-ninja -C prelude
-```
-
-This enables `import std;` used in all source files.
-
-## Generate `params.h`
-
-```bash
-ninja -C genparam
+ninja -C build genparam
 ```
 
 This generates `params.h` for all problems, improving language server support when browsing test generators.
@@ -74,7 +55,7 @@ cd problems && ./generate.py -p sample/aplusb
 Generate for all problems with non-empty solutions:
 
 ```bash
-ninja -C gentests    # for all
+ninja -C build gentests    # for all
 ```
 
 Note: Only problems with non-empty solutions are processed to save time.
@@ -135,16 +116,6 @@ ninja -C build aplusb-main-bench
 ninja -C build bench -j1    # for all
 ```
 
-Multiple runs:
-
-```bash
-N=10 ninja -C build aplusb-main-bench
-```
-
-```bash
-N=10 ninja -C build bench -j1    # for all
-```
-
 Benchmark results are saved in `analysis/benchmark`.
 
 ## Coverage
@@ -181,9 +152,6 @@ ninja -C build pack
 
 ## Miscellaneous
 
-- The line `#define prelude import std;` in `toy/common.h`, along with `prelude;` included in all source files, is a workaround for a clangd issue. It is not required for compilation.
-- For reliable benchmark results, I sometimes run benchmarks immediately after boot, replacing `init` with `bash` to minimize background noise. This is optional but useful for strict performance testing.
-
----
+For reliable benchmark results, I sometimes run benchmarks immediately after boot, replacing `init` with `bash` to minimize background noise. This is optional but useful for strict performance testing.
 
 Feel free to customize the setup or structure to better fit your workflow.

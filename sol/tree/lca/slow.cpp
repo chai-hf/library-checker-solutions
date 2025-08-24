@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -13,7 +12,7 @@ int heavy[N];
 int ances[N];
 int parent[N];
 
-def build_step_1(int u, int d) -> void {
+auto build_step_1(int u, int d) -> void {
   size[u] = 1;
   depth[u] = d;
   for (int v = head[u]; v; v = next[v]) {
@@ -25,7 +24,7 @@ def build_step_1(int u, int d) -> void {
   }
 }
 
-def build_step_2(int u, int a) -> void {
+auto build_step_2(int u, int a) -> void {
   ances[u] = a;
   for (int v = head[u]; v; v = next[v]) {
     if (v != heavy[u]) {
@@ -35,7 +34,7 @@ def build_step_2(int u, int a) -> void {
   if (heavy[u]) build_step_2(heavy[u], a);
 }
 
-def lca(int u, int v) -> int {
+auto lca(int u, int v) -> int {
   while (ances[u] != ances[v]) {
     if (depth[ances[u]] > depth[ances[v]]) {
       u = parent[ances[u]];
@@ -53,11 +52,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  std::memset(head, 0, 4 * n);
-  std::memset(heavy, 0, 4 * n);
-  std::memset(parent, 0, 4 * n);
-#endif
   for (int i = 1; i < n; ++i) {
     int p = rd.uh();
     parent[i] = p;

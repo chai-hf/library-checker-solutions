@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -17,9 +16,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  std::memset(l, 0, 4 * n);
-#endif
   for (int i = 0; i < n; ++i) a[i] = rd.uw();
   for (int i = 1; i < n; ++i) p[i] = rd.uh();
   for (int i = n - 1; i > 0; --i) l[p[i]] += (l[i] += 1);
@@ -35,7 +31,7 @@ int main() {
   for (int i = 1; i <= n; ++i) b[i] += b[i - 1];
   for (int i = n; i >= 1; --i) b[i] -= b[i - (i & -i)];
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int k = l[rd.uh()];
       int x = rd.uw();

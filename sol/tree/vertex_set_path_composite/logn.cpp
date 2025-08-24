@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -49,7 +48,7 @@ struct {
   int next;
 } edge[N * 2];
 
-def build_step_1(int u, int p) -> void {
+auto build_step_1(int u, int p) -> void {
   size[u] = 1;
   for (int e = head[u]; e; e = edge[e].next) {
     int v = edge[e].to;
@@ -63,7 +62,7 @@ def build_step_1(int u, int p) -> void {
   }
 }
 
-def build_step_2(int u, int w, int p, int d) -> void {
+auto build_step_2(int u, int w, int p, int d) -> void {
   int i = ++id;
   node2id[u] = i;
   depth[i] = d;
@@ -94,7 +93,7 @@ def build_step_2(int u, int w, int p, int d) -> void {
   }
 }
 
-def maintain(int u) -> void {
+auto maintain(int u) -> void {
   node[u].s = (node[u].t = node[node[u].l].s + node[u].v) + node[node[u].r].s;
 }
 
@@ -135,12 +134,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  id = 0;
-  std::memset(head, 0, 4 * n);
-  std::memset(heavy, 0, 4 * n);
-  std::memset(node, 0, (n + 1) * sizeof(Node));
-#endif
   node[0].s.a = 1;
   for (int i = 0; i < n; ++i) a[i] = rd.uw(), b[i] = rd.uw();
   for (int i = 1; i < n; ++i) {
@@ -159,7 +152,7 @@ int main() {
     }
   }
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int u = node2id[rd.uh()];
       node[u].v = {rd.uw(), rd.uw()};

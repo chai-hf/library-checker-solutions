@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -26,12 +25,12 @@ struct Node {
   i8 k;
 } node[N];
 
-def reverse(int x) -> void {
+auto reverse(int x) -> void {
   node[x].rev ^= 1;
   std::swap(node[x].aff.b, node[x].aff.c);
 }
 
-def pushdown(int x) -> void {
+auto pushdown(int x) -> void {
   if (node[x].rev) {
     std::swap(node[x].ch[0], node[x].ch[1]);
     node[node[x].ch[0]].k = 0;
@@ -42,13 +41,13 @@ def pushdown(int x) -> void {
   }
 }
 
-def maintain(int x) -> void {
+auto maintain(int x) -> void {
   node[x].aff = node[node[x].ch[0]].aff +
                 Affine{node[x].a, node[x].b, node[x].b} +
                 node[node[x].ch[1]].aff;
 }
 
-def rotateup(int x) -> void {
+auto rotateup(int x) -> void {
   int p = node[x].p;
   int g = node[p].p;
   int k = node[x].k;
@@ -67,9 +66,9 @@ def rotateup(int x) -> void {
   maintain(p);
 }
 
-def is_root(int x) -> bool { return node[x].k == -1; }
+auto is_root(int x) -> bool { return node[x].k == -1; }
 
-def splay(int x) -> void {
+auto splay(int x) -> void {
   pushdown(x);
   while (!is_root(x)) {
     if (int p = node[x].p; is_root(p)) {
@@ -92,7 +91,7 @@ def splay(int x) -> void {
   }
 }
 
-def access(int x) -> void {
+auto access(int x) -> void {
   splay(x);
   node[node[x].ch[1]].k = -1;
   node[x].ch[1] = 0;
@@ -111,7 +110,7 @@ struct {
   int next;
 } edge[N * 2];
 
-def build(int u, int p) -> void {
+auto build(int u, int p) -> void {
   for (int e = head[u]; e; e = edge[e].next) {
     int v = edge[e].to;
     if (v != p) {
@@ -129,9 +128,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  std::memset(head, 0, 4 * n);
-#endif
   for (int i = 1; i <= n; ++i) {
     node[i] = {.k = -1};
     u32 a = node[i].a = rd.uw();
@@ -146,7 +142,7 @@ int main() {
   }
   build(0, 0);
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int u = rd.uh() + 1;
       int v = rd.uh() + 1;

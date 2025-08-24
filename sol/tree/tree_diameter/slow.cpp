@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -13,12 +12,12 @@ struct edge {
 int pa[N];
 std::vector<edge> ch[N];
 
-def tree_diameter(int u, int p) -> std::pair<u64, int> {
+auto tree_diameter(int u, int p) -> std::pair<u64, int> {
   pa[u] = p;
   std::pair<u64, int> ans{0, u};
-  for (let[v, len] : ch[u]) {
+  for (auto [v, len] : ch[u]) {
     if (v != p) {
-      def res = tree_diameter(v, u);
+      auto res = tree_diameter(v, u);
       res.first += len;
       ans = std::max(ans, res);
     }
@@ -39,15 +38,12 @@ int main() {
     ch[a].emplace_back(b, c);
     ch[b].emplace_back(a, c);
   }
-  let[_, u] = tree_diameter(0, -1);
-  let[d, v] = tree_diameter(u, -1);
+  auto [_, u] = tree_diameter(0, -1);
+  auto [d, v] = tree_diameter(u, -1);
   int c = 0;
   for (int i = v; i != -1; i = pa[i]) ++c;
   wt.ud(d);
   wt.uw(c);
   for (int i = v; i != -1; i = pa[i]) wt.uw(i);
-#ifdef LOCAL
-  for (int i = 0; i < n; ++i) ch[i].clear();
-#endif
   return 0;
 }

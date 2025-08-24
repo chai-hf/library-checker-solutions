@@ -1,27 +1,12 @@
 #pragma once
 
-#ifdef LOCAL
-import std;
-#else
-#include <bits/stdc++.h>
-#endif
+#include <bits/extc++.h>
 
-#ifdef CLANGD
-#define prelude import std
-#else
-#define prelude
-#endif
-
-#include <cassert>
 #ifdef NDEBUG
 #define toy_assert(cond) [[assume(cond)]]
 #else
 #define toy_assert(cond) assert(cond)
 #endif
-
-#define def auto
-#define let const auto
-#define fun constexpr auto
 
 namespace toy {
 
@@ -43,7 +28,7 @@ using f32 = float;
 using f64 = double;
 using f80 = long double;
 
-template <typename T> fun ensure(T &&t) noexcept -> decltype(auto) {
+template <typename T> constexpr auto ensure(T &&t) noexcept -> decltype(auto) {
   toy_assert(t);
   return std::forward<T>(t);
 }
