@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -34,7 +33,7 @@ int main() {
   int q = rd.uh();
   for (int i = 0; i < n; ++i) a[i] = {1, 0}, a[n + i].b = rd.uw();
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int l = n + rd.uh();
       int r = n + rd.uh() - 1;

@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -39,11 +38,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  id = 0;
-  std::memset(head, 0, 4 * n);
-  std::memset(c, 0, 8 * n + 16);
-#endif
   for (int i = 0; i < n; ++i) a[i] = rd.uw();
   for (int i = 1; i < n; ++i) {
     int u = rd.uh();
@@ -80,7 +74,7 @@ int main() {
     }
   }
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int k = rd.uh();
       int x = rd.uw();

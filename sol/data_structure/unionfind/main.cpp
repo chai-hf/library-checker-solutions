@@ -1,11 +1,10 @@
 #include <common.h>
-prelude;
 
 namespace {
 
 int pa[200000];
 
-def find(int u) -> int {
+auto find(int u) -> int {
   int w = pa[u], v;
   if (w < 0) return u;
   while (pa[w] >= 0) w = pa[w];
@@ -22,9 +21,9 @@ int main() {
   int q = rd.uh();
   std::memset(pa, -1, 4 * n);
   while (q--) {
-    let t = rd.u1();
-    let u = find(rd.uh());
-    let v = find(rd.uh());
+    auto t = rd.u1();
+    auto u = find(rd.uh());
+    auto v = find(rd.uh());
     if (t == 0 && u != v) {
       if (pa[u] < pa[v])
         pa[v] = u;

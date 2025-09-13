@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -91,12 +90,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  root = 0;
-  std::memset(lv18, 0, sizeof(lv18));
-  std::memset(lv12, 0, sizeof(lv12));
-  std::memset(leaf, 0, sizeof(leaf));
-#endif
   int i = 0;
   for (; i + 64 < n; i += 64) {
     u32 a = _mm256_movemask_epi8(_mm256_cmpeq_epi8(
@@ -116,8 +109,8 @@ int main() {
     root |= u64(!!lv18[i]) << (i & 63);
   rd.p += n + 1;
   while (q--) {
-    let t = rd.u1();
-    let k = rd.uh();
+    auto t = rd.u1();
+    auto k = rd.uh();
     if (t == 0) {
       set(k);
     }
@@ -125,11 +118,11 @@ int main() {
       unset(k);
     }
     if (t == 2) {
-      let x = get(k);
+      auto x = get(k);
       wt.uw(x);
     }
     if (t == 3) {
-      let x = nxt(k);
+      auto x = nxt(k);
       if (~x) {
         wt.uw(x);
       } else {
@@ -137,7 +130,7 @@ int main() {
       }
     }
     if (t == 4) {
-      let x = pre(k);
+      auto x = pre(k);
       if (~x) {
         wt.uw(x);
       } else {

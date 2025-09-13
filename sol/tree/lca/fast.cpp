@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -17,9 +16,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  std::memset(node2id, 0, 4 * n);
-#endif
   for (int i = 1; i < n; ++i) parent[i] = rd.uh();
   for (int i = n - 1; i > 0; --i) node2id[parent[i]] += node2id[i] + 1;
   for (int i = 1; i < n; ++i) {

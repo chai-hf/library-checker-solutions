@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 u64 a[500001];
 
@@ -11,7 +10,7 @@ int main() {
   for (int i = 1; i <= n; ++i) a[i] = a[i - 1] + rd.uw();
   for (int i = n; i >= 1; --i) a[i] -= a[i - (i & -i)];
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int k = rd.uh() + 1;
       int x = rd.uw();

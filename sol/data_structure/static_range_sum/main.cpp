@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -14,9 +13,9 @@ int main() {
   int q = rd.uh();
   for (int i = 1; i <= n; ++i) a[i] = a[i - 1] + rd.uw();
   while (q--) {
-    let l = rd.uh();
-    let r = rd.uh();
-    let sum = a[r] - a[l];
+    auto l = rd.uh();
+    auto r = rd.uh();
+    auto sum = a[r] - a[l];
     wt.ud(sum);
   }
   return 0;

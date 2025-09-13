@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -16,12 +15,12 @@ struct Node {
   int l, r;
 } node[N];
 
-def maintain(int x) -> void {
+auto maintain(int x) -> void {
   node[x].size = node[node[x].l].size + 1 + node[node[x].r].size;
   node[x].sum = (node[node[x].l].sum + node[x].val + node[node[x].r].sum) % P;
 }
 
-def build(int l, int r) -> int {
+auto build(int l, int r) -> int {
   if (l > r) return 0;
   int m = (l + r) / 2;
   node[m].l = build(l, m - 1);
@@ -30,9 +29,9 @@ def build(int l, int r) -> int {
   return m;
 }
 
-def reverse(int x) -> void { node[x].rev ^= 1; }
+auto reverse(int x) -> void { node[x].rev ^= 1; }
 
-def affine(int x, u64 a, u64 b) -> void {
+auto affine(int x, u64 a, u64 b) -> void {
   if (x == 0) return;
   node[x].a = (a * node[x].a) % P;
   node[x].b = (a * node[x].b + b) % P;
@@ -40,7 +39,7 @@ def affine(int x, u64 a, u64 b) -> void {
   node[x].sum = (a * node[x].sum + b * node[x].size) % P;
 }
 
-def pushdown(int x) -> void {
+auto pushdown(int x) -> void {
   if (node[x].rev) {
     std::swap(node[x].l, node[x].r);
     node[node[x].l].rev ^= 1;
@@ -55,7 +54,7 @@ def pushdown(int x) -> void {
   }
 }
 
-def zig(int &x) -> void {
+auto zig(int &x) -> void {
   int l = node[x].l;
   node[x].l = node[l].r;
   maintain(x);
@@ -63,7 +62,7 @@ def zig(int &x) -> void {
   x = l;
 }
 
-def zag(int &x) -> void {
+auto zag(int &x) -> void {
   int r = node[x].r;
   node[x].r = node[r].l;
   maintain(x);
@@ -71,7 +70,7 @@ def zag(int &x) -> void {
   x = r;
 }
 
-def splay(int &x, int k) -> void {
+auto splay(int &x, int k) -> void {
   pushdown(x);
   if (int &l = node[x].l, &r = node[x].r, size = node[l].size; k == size) {
     return;
@@ -116,7 +115,7 @@ int main() {
   for (int i = 2; i <= n + 1; ++i) node[i].val = rd.uw();
   int x = build(1, n += 2);
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       ++n;
       int k = rd.uh();

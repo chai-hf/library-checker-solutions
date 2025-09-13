@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -33,7 +32,7 @@ struct {
   int next;
 } edge[N * 2];
 
-def build_step_1(int u, int p) -> void {
+auto build_step_1(int u, int p) -> void {
   size[u] = 1;
   for (int e = head[u]; e; e = edge[e].next) {
     int v = edge[e].to;
@@ -47,14 +46,14 @@ def build_step_1(int u, int p) -> void {
   }
 }
 
-def build_step_2(int u, int w, int p, int d) -> void {
+auto build_step_2(int u, int w, int p, int d) -> void {
   int i = id++;
   node2id[u] = i;
   depth[i] = d;
   int anc = ances[i] = node2id[w];
   parent[i] = node2id[p];
   node[i * 2 + 1] = {a[u], b[u], b[u]};
-  let a = node + anc * 2;
+  auto a = node + anc * 2;
   int k = (i - anc) * 2 + 1;
   for (int j = 1; k & (j * 2); k -= j, j *= 2) {
     a[k - j] = a[k - j * 2] + a[k];
@@ -70,9 +69,9 @@ def build_step_2(int u, int w, int p, int d) -> void {
   }
 }
 
-def apply_1(int i, u32 x) -> u32 {
+auto apply_1(int i, u32 x) -> u32 {
   int anc = ances[i];
-  let a = node + anc * 2;
+  auto a = node + anc * 2;
   int r = (i - anc) * 2 + 2;
   for (; r; r -= r & -r) {
     x = a[r - (r & -r) / 2] + x;
@@ -80,9 +79,9 @@ def apply_1(int i, u32 x) -> u32 {
   return x;
 }
 
-def apply_2(int i, u32 x) -> u32 {
+auto apply_2(int i, u32 x) -> u32 {
   int anc = ances[i];
-  let a = node + anc * 2;
+  auto a = node + anc * 2;
   int r = (i - anc) * 2 + 2;
   for (int k = 0; k < r;) {
     int t = 1 << log(r - k);
@@ -92,10 +91,10 @@ def apply_2(int i, u32 x) -> u32 {
   return x;
 }
 
-def apply_1(int i, int j, u32 x) -> u32 {
+auto apply_1(int i, int j, u32 x) -> u32 {
   int anc = ances[i];
   if (i == anc) return apply_1(j, x);
-  let a = node + anc * 2;
+  auto a = node + anc * 2;
   int l = (i - anc) * 2 - 1;
   int r = (j - anc) * 2 + 3;
   int k = (-1 << log(l ^ r)) & r;
@@ -110,10 +109,10 @@ def apply_1(int i, int j, u32 x) -> u32 {
   return x;
 }
 
-def apply_2(int i, int j, u32 x) -> u32 {
+auto apply_2(int i, int j, u32 x) -> u32 {
   int anc = ances[i];
   if (i == anc) return apply_2(j, x);
-  let a = node + anc * 2;
+  auto a = node + anc * 2;
   int l = (i - anc) * 2 - 1;
   int r = (j - anc) * 2 + 3;
   int k = (-1 << log(l ^ r)) & r;
@@ -135,11 +134,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  id = 0;
-  std::memset(head, 0, 4 * n);
-  std::memset(heavy, 0, 4 * n);
-#endif
   for (int i = 0; i < n; ++i) a[i] = rd.uw(), b[i] = rd.uw();
   for (int i = 1; i < n; ++i) {
     int u = rd.uh();
@@ -152,13 +146,13 @@ int main() {
   std::memset(size, 0, sizeof(int) * n);
   for (int i = 0; i < n; ++i) size[ances[i]]++;
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int i = node2id[rd.uh()];
       u32 c = rd.uw();
       u32 d = rd.uw();
       int anc = ances[i];
-      let a = node + anc * 2;
+      auto a = node + anc * 2;
       int n = size[anc];
       int k = (i - anc) * 2 + 1;
       a[k] = {c, d, d};
