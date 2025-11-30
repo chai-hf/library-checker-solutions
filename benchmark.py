@@ -38,19 +38,20 @@ def check_system_settings():
             sys.exit(1)
 
     # Check Hyperthreading
-    # for cpu in os.listdir("/sys/devices/system/cpu/"):
-    #     if cpu.startswith("cpu") and cpu[3:].isdigit():
-    #         topo_path = f"/sys/devices/system/cpu/{cpu}/topology/thread_siblings_list"
-    #         if os.path.exists(topo_path):
-    #             with open(topo_path, "r") as f:
-    #                 if len(f.read().strip().split(',')) != 1:
-    #                     print(f"Error: Hyperthreading is enabled for {cpu}. Please disable it.")
-    #                     sys.exit(1)
+    for cpu in os.listdir("/sys/devices/system/cpu/"):
+        if cpu.startswith("cpu") and cpu[3:].isdigit():
+            topo_path = f"/sys/devices/system/cpu/{cpu}/topology/thread_siblings_list"
+            if os.path.exists(topo_path):
+                with open(topo_path, "r") as f:
+                    if len(f.read().strip().split(',')) != 1:
+                        print(f"Error: Hyperthreading is enabled for {cpu}. Please disable it.")
+                        sys.exit(1)
 
 def extract_task_clock(perf_output):
     for line in perf_output.splitlines():
         if "task-clock" in line:
-            return float(line.split()[0].replace(',', ''))  # Remove commas for consistency
+            value = float(line.split()[0].replace(',', ''))
+            return value if 'msec' in line else value * 1e-6
     return float('inf')
 
 def extract_memory_usage(time_output):
@@ -63,16 +64,15 @@ def parse_test_name(filename):
         return match.groups()
     return (filename, None)
 
-def run_single_benchmark(exe, inputs, label):
+def run_single_benchmark(exe, input, label):
     # Run time command to measure memory usage
-    time_cmd = ["time", exe] + inputs
-    time_result = subprocess.run(time_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+    time_cmd = ["time", exe]
+    time_result = subprocess.run(time_cmd, stdin=input, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
     memory_usage = extract_memory_usage(time_result.stderr)
 
     # Run perf benchmark
-    n = os.environ.get('N', '1')
-    perf_cmd = ["perf", "stat", "-d", "-r", n, exe] + inputs
-    perf_result = subprocess.run(perf_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+    perf_cmd = ["perf", "stat", exe]
+    perf_result = subprocess.run(perf_cmd, stdin=input, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
     task_clock = extract_task_clock(perf_result.stderr)
 
     return (label, task_clock, memory_usage, "\n".join(perf_result.stderr.splitlines()[3:]), time_result.stderr)
@@ -80,18 +80,15 @@ def run_single_benchmark(exe, inputs, label):
 def run_benchmark(exe, inputs, summary):
     check_system_settings()
 
-    exe = "./" + exe
     results = []
     group_sizes = defaultdict(list)
-
-    # Run ALL benchmark (combined input)
-    results_all = run_single_benchmark(exe, inputs, "All")
 
     # Run benchmarks for each input file
     for input_file in inputs:
         test_name = os.path.basename(input_file).split('.')[0]
-        result = run_single_benchmark(exe, [input_file], test_name)
-        results.append(result)
+        with open(input_file, 'r') as input:
+            result = run_single_benchmark(exe, input, test_name)
+            results.append(result)
 
         group_name, _ = parse_test_name(test_name)
         group_sizes[group_name].append(os.path.getsize(input_file))
@@ -100,7 +97,7 @@ def run_benchmark(exe, inputs, summary):
     sorted_groups = sorted(group_sizes.keys(), key=lambda g: (-sum(group_sizes[g]) / len(group_sizes[g]), g))
     results.sort(key=lambda x: (sorted_groups.index(parse_test_name(x[0])[0]), x[0]))
 
-    # Statistics (exclude ALL)
+    # Statistics
     times = [r[1] for r in results]
     memories = [r[2] for r in results]
 
@@ -108,7 +105,6 @@ def run_benchmark(exe, inputs, summary):
         f"| Name                                               | Time (ms) | Memory (KB) |",
         f"|:---------------------------------------------------|----------:|------------:|",
         f"| Sum                                                | {sum(times):>9,.2f} | {sum(memories):>11,} |",
-        f"| All                                                | {results_all[1]:>9,.2f} | {results_all[2]:>11,} |",
         f"| Max                                                | {max(times):>9,.2f} | {max(memories):>11,} |",
     ]
 
@@ -121,9 +117,8 @@ def run_benchmark(exe, inputs, summary):
         f.write("\n".join(summary_lines) + "\n\n")
 
         # Detailed outputs
-        f.write(f"=== ALL ===\n```\n{results_all[4]}\n{results_all[3]}```\n")
         for test_name, _, _, perf_output, time_output in results:
-            f.write(f"=== {test_name} ===\n```\n{time_output}\n{perf_output}```\n")
+            f.write(f"\n### {test_name}\n```\n{time_output}\n{perf_output}```\n")
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:

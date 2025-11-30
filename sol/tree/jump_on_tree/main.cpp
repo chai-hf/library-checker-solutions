@@ -1,5 +1,4 @@
 #include <common.h>
-prelude;
 
 namespace {
 
@@ -19,7 +18,7 @@ int node2id[N];
 int id2node[N];
 int id;
 
-def build_step_1(int u, int d, int p) -> void {
+auto build_step_1(int u, int d, int p) -> void {
   size[u] = 1;
   depth[u] = d;
   parent[u] = p;
@@ -34,7 +33,7 @@ def build_step_1(int u, int d, int p) -> void {
   }
 }
 
-def build_step_2(int u, int a, int p) -> void {
+auto build_step_2(int u, int a, int p) -> void {
   node2id[u] = id;
   id2node[id] = u;
   ++id;
@@ -47,7 +46,7 @@ def build_step_2(int u, int a, int p) -> void {
   }
 }
 
-def lca(int u, int v) -> int {
+auto lca(int u, int v) -> int {
   if (depth[u] < 32 && depth[v] < 32) {
     while (depth[u] > depth[v]) {
       u = parent[u];
@@ -71,7 +70,7 @@ def lca(int u, int v) -> int {
   return depth[u] < depth[v] ? u : v;
 }
 
-def jump(int u, int d) -> int {
+auto jump(int u, int d) -> int {
   if (int t = depth[u] - d; t < 32) {
     while (t--) u = parent[u];
     return u;
@@ -89,12 +88,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  id = 0;
-  std::memset(head, 0, 4 * n);
-  std::memset(heavy, 0, 4 * n);
-  std::memset(parent, 0, 4 * n);
-#endif
   for (int i = 1; i < n; ++i) {
     int a = rd.uh();
     int b = rd.uh();

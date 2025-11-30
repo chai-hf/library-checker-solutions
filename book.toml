@@ -1,5 +1,5 @@
 [book]
-src = "analysis"
+src = "build/analysis"
 
 [build]
 build-dir = "gh-pages"

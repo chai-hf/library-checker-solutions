@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -33,7 +32,7 @@ struct {
   int next;
 } edge[N * 2];
 
-def build_step_1(int u, int p) -> void {
+auto build_step_1(int u, int p) -> void {
   size[u] = 1;
   for (int e = head[u]; e; e = edge[e].next) {
     int v = edge[e].to;
@@ -47,7 +46,7 @@ def build_step_1(int u, int p) -> void {
   }
 }
 
-def build_step_2(int u, int w, int p, int d) -> void {
+auto build_step_2(int u, int w, int p, int d) -> void {
   int i = id++;
   node2id[u] = i;
   node[i] = {a[u], b[u], b[u]};
@@ -72,11 +71,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  id = 0;
-  std::memset(head, 0, 4 * n);
-  std::memset(heavy, 0, 4 * n);
-#endif
   for (int i = 0; i < n; ++i) a[i] = rd.uw(), b[i] = rd.uw();
   for (int i = 1; i < n; ++i) {
     int u = rd.uh();
@@ -88,7 +82,7 @@ int main() {
   build_step_2(0, 0, 0, 0);
   std::memcpy(node + n, node, sizeof(Node) * n);
   for (int i = n - 1; i > 0; --i) node[i] = node[i * 2] + node[i * 2 + 1];
-  let apply_1 = [&](int l, int r, u32 x) -> u32 {
+  auto apply_1 = [&](int l, int r, u32 x) -> u32 {
     l += n - 1;
     r += n + 1;
     int k = log(l ^ r);
@@ -101,7 +95,7 @@ int main() {
     }
     return x;
   };
-  let apply_2 = [&](int l, int r, u32 x) -> u32 {
+  auto apply_2 = [&](int l, int r, u32 x) -> u32 {
     l += n - 1;
     r += n + 1;
     int k = log(l ^ r);
@@ -115,7 +109,7 @@ int main() {
     return x;
   };
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int k = n + node2id[rd.uh()];
       u32 c = rd.uw();
@@ -146,7 +140,7 @@ int main() {
         x = apply_2(u, v, x);
       }
       for (; c > 0; --c) {
-        def[l, r] = vec[c];
+        auto [l, r] = vec[c];
         x = apply_2(l, r, x);
       }
       wt.uw(x);

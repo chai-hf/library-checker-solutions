@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -25,10 +24,6 @@ int main() {
   wt wt;
   int n = rd.uh();
   int q = rd.uh();
-#ifdef LOCAL
-  std::memset(head, 0, 4 * n);
-  std::memset(c, 0, 8 * n + 16);
-#endif
   for (int i = 0; i < n; ++i) a[i] = rd.uw();
   for (int i = 1; i < n; ++i) {
     int u = rd.uh();
@@ -39,7 +34,7 @@ int main() {
   p[0] = -1, l[0] = 1, b[1] = c[1] = a[0];
   for (int u = 0, i = 1; u >= 0;) {
     if (int e = head[u]; e) {
-      def[v, x] = edge[e];
+      auto [v, x] = edge[e];
       head[u] = x;
       if (v == p[u]) continue;
       p[v] = u;
@@ -79,7 +74,7 @@ int main() {
     }
   }
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int k = rd.uh();
       int x = rd.uw();

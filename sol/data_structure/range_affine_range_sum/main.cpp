@@ -1,6 +1,5 @@
 #include <common.h>
 #include <toy/bit.h>
-prelude;
 
 namespace {
 
@@ -56,7 +55,7 @@ int main() {
     a[i].sum = mod(a[2 * i].sum + a[2 * i + 1].sum);
   }
   while (q--) {
-    let t = rd.u1();
+    auto t = rd.u1();
     if (t == 0) {
       int l = n + rd.uh();
       int r = n + rd.uh() - 1;

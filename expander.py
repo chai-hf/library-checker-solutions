@@ -31,11 +31,6 @@ class Expander:
 
     included = set()  # type: Set[Path]
 
-    def expand_line(self, line: str) -> str:
-        if not self.full or "noexcept" in line:
-            return line
-        return line.replace("->", "noexcept ->")
-
     def find_acl(self, acl_name: str) -> Path:
         for lib_path in self.lib_paths:
             path = lib_path / acl_name
@@ -64,9 +59,9 @@ class Expander:
                     acl_path = self.find_acl(m.group(1))
                     result.extend(self.expand_acl(acl_path))
                 except FileNotFoundError:
-                    result.append(self.expand_line(line))
+                    result.append(line)
             else:
-                result.append(self.expand_line(line))
+                result.append(line)
         return result
 
     def expand(self, source: str) -> str:
@@ -79,9 +74,9 @@ class Expander:
                     acl_path = self.find_acl(m.group(1))
                     result.extend(self.expand_acl(acl_path))
                 except FileNotFoundError:
-                    result.append(self.expand_line(line))
+                    result.append(line)
             else:
-                result.append(self.expand_line(line))
+                result.append(line)
         return '\n'.join(result)
 
 
